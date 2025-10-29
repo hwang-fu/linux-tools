@@ -84,6 +84,16 @@
         text-decoration-thickness: 2px; /* optional: make it a bit thicker */
         text-underline-offset: 2px;     /* optional: move it slightly down */
     }
+
+    body {
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+    }
+
+    code {
+        color: purple;
+        font-weight: bold;
+    }
+
 </style>
 <!-- * * * * * * * * * * * * * * -->
 
@@ -101,94 +111,61 @@
 <!-- * * * * * * * * * * * * * * -->
 <h3>About</h3>
 <ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3>About</h3>
-<ol>
     <li><code>ripgrep</code> (command: <code>rg</code>) is a line-oriented search tool that recursively searches your current directory for a regex pattern.</li>
     <br/>
-    <li></li>
+    <li>It is much faster than <code>grep</code></li>
     <br/>
-    <li></li>
+    <li>Basic usage: <code>rg &lt;pattern&gt;</code></li>
     <br/>
-    <li></li>
+    <li>Matches lines with "foo" or "bar": <code>rg "foo|bar"</code></li>
     <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
+    <li>Disables regex, searches literally: <code>rg -F "foo.bar"</code></li>
     <br/>
-    <li></li>
+    <li>Only search in certain file types: <code>rg "import" --type py</code></li>
     <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
+    <li>Exclude search from certain file types: <code>rg "main" --type-not cpp</code></li>
     <br/>
-    <li></li>
+    <li>Search by file extension: <code>rg "main" -g "*.cpp"</code></li>
     <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
+    <li><code>ripgrep</code> os usually 2x ~ 10x faster thant traditional <code>grep</code>:</li>
     <br/>
-    <li></li>
+    <ul>
+        <li>Respects <code>.gitignore</code>, <code>.ignore</code>, <code>.rgignore</code></li>
+        <br/>
+        <li>Skips hidden files and binary files by default.</li>
+        <br/>
+    </ul>
     <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
+    <li>If you want to include everything: <code>rg --no-ignore --hidden &lt;pattern&gt;</code></li>
     <br/>
-    <li></li>
+    <li>Useful options</li>
+    <br/>
+    <ul>
+        <li><code>-i</code> (case-insensitive search)</li>
+        <br/>
+        <li><code>-w</code> (match whole words only)</li>
+        <br/>
+        <li><code>-n</code> (show line numbers, it is on by default)</li>
+        <br/>
+        <li><code>-A 3</code> (show 3 lines after match)</li>
+        <br/>
+        <li><code>-B 3</code> (show 3 lines before match)</li>
+        <br/>
+        <li><code>-l</code> (list only filenames with match)</li>
+        <br/>
+        <li><code>-c</code> (count matches per file)</li>
+        <br/>
+        <li><code>-F</code> (treat pattern as fixed string, not regex)</li>
+        <br/>
+        <li><code>--no-ignore</code> (dont respect .gitignore)</li>
+        <br/>
+        <li><code>--hidden</code> (include hidden files)</li>
+        <br/>
+        <li><code>-g "pattern"</code> (filter by glob pattern)</li>
+        <br/>
+        <li><code>-t &lt;lang&gt;</code> (limit to certain languages)</li>
+        <br/>
+    </ul>
     <br/>
 </ol>
 <br/>
@@ -196,372 +173,4 @@
 
 
 <hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-
-
-
-
-
-
-
-
-
 
