@@ -84,6 +84,15 @@
         text-decoration-thickness: 2px; /* optional: make it a bit thicker */
         text-underline-offset: 2px;     /* optional: move it slightly down */
     }
+
+    body {
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+    }
+
+    code {
+        color: purple;
+        font-weight: bold;
+    }
 </style>
 <!-- * * * * * * * * * * * * * * -->
 
@@ -99,17 +108,17 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>What is <u>GBD</u>?</h3>
 <ol>
-    <li></li>
+    <li>GDB stands for GNU Debugger.</li>
     <br/>
-    <li></li>
+    <li>Before you can debug, you must compile your C/C++ program with the <code>-g</code> flag:</li>
+    <pre><code>
+        gcc -g main.c   -o main   # for C
+        g++ -g main.cpp -o main   # for C++
+    </code></pre>
     <br/>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-    <li></li>
+    <li>Start GBD: <code>gdb ./main</code></li>
     <br/>
 </ol>
 <br/>
@@ -120,13 +129,79 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
+<h3 id="summary">Commands Summary</h3>
+<br/>
+<table>
+    <thead>
+        <tr>
+            <th>Command</th>
+            <th>Alias</th>
+            <th>Description</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><code>run</code></td>
+            <td><code>r</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>break</code></td>
+            <td><code>b</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>next</code></td>
+            <td><code>n</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>step</code></td>
+            <td><code>s</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>continue</code></td>
+            <td><code>c</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>print &lt;expr&gt;</code></td>
+            <td><code>p &lt;expr&gt;</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>info locals</code></td>
+            <td><code></code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>info breakpoints</code></td>
+            <td><code></code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>delete</code></td>
+            <td><code></code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>backtrace</code></td>
+            <td><code>bt</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>list</code></td>
+            <td><code>l</code></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><code>quit</code></td>
+            <td><code>q</code></td>
+            <td></td>
+        </tr>
+    </tbody>
+</table>
 <br/>
 <!-- * * * * * * * * * * * * * * -->
 
@@ -135,82 +210,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Running the program (<a href="#summary">run</a>)</h3>
 <ol>
     <li></li>
     <br/>
@@ -225,7 +225,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Breakpoints (<a href="#summary">break</a>)</h3>
 <ol>
     <li></li>
     <br/>
@@ -240,7 +240,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Stepping through code (<a href="#summary">next</a> and <a href="#summary">step</a>)</h3>
 <ol>
     <li></li>
     <br/>
@@ -255,7 +255,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Inspecting variables and memory (<a href="#summary">print</a>)</h3>
 <ol>
     <li></li>
     <br/>
@@ -270,7 +270,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Backtrace and frames (<a href="#summary">backtrace</a>)</h3>
 <ol>
     <li></li>
     <br/>
@@ -285,7 +285,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Watchpoints (<a href="#summary">watch</a>)</h3>
 <ol>
     <li></li>
     <br/>
@@ -300,37 +300,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Inspecting registers and assembly (<a href="#summary">info</a>)</h3>
 <ol>
     <li></li>
     <br/>
@@ -372,192 +342,4 @@
 
 
 <hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-
-
-
-
-
-
-
-
-
 
