@@ -308,25 +308,18 @@ g++ -g main.cpp -o main   # for C++
 <!-- * * * * * * * * * * * * * * -->
 <h3>Stepping through code (<a href="#summary">next</a> and <a href="#summary">step</a>)</h3>
 <ol>
-    <li><code>step [n]</code>: <u>step into</u> function calls.</li>
+    <li><code>step [n]</code>: To execute one line of code, if the current line calls a function, stops at the first line inside it.<br/>
+        With <i>n</i>, it repeats that <i>n</i> times.</li>
     <br/>
     <br/>
-    <li><code>next [n]</code>: <u>step over</u> function calls.</li>
+    <li><code>next [n]</code>: To execute one line of code, executing any called functions completely.<br/>
+        With <i>n</i>, it repeats that <i>n</i> times.</li>
     <br/>
     <br/>
-    <li><code>stepi [n]</code>: <u>step into</u> one machine instruction.</li>
+    <li><code>stepi [n]</code>: executes exactly one machine instruction and then stops.</li>
     <br/>
     <br/>
-    <li><code>nexti [n]</code>: <u>step over</u> one machine instruction.</li>
-    <br/>
-    <br/>
-    <li></li>
-    <br/>
-    <br/>
-    <li></li>
-    <br/>
-    <br/>
-    <li></li>
+    <li><code>nexti [n]</code>: executes one machine instruction but if that instruction is a call, GDB runs the entire call and stops at the instruction after the call.</li>
     <br/>
 </ol>
 <br/>
