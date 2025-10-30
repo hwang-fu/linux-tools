@@ -248,33 +248,54 @@ g++ -g main.cpp -o main   # for C++
     <li>Set a breakpoint:</li>
     <ul>
         <br/>
-        <li></li>
+        <li>At <i>function</i>: <code>break main</code></li>
         <br/>
-        <li></li>
+        <li>At <i>file:line</i>: <code>break foo.c:42</code></li>
         <br/>
-        <li></li>
+        <li>At address:<br/><br/>
+            <code>break *0x004012ab</code><br/><br/>
+            <code>break *main</code><br/><br/>
+            <code>break *main + 12</code><br/><br/>
+            <code>break *($pc + 4)</code>
+        </li>
+        <br/>
     </ul>
     <br/>
     <br/>
-    <li>Temporary breakpoint (auto-delete on first hit):</li>
+    <li>Temporary breakpoint (auto-delete on first hit): use <b>tbreak</b> instead of <b>break</b>.</li>
     <br/>
     <br/>
     <li>Inspect breakpoints: <code>info break</code> or <code>info breakpoints</code></li>
     <br/>
     <br/>
     <li>Enable / Disable / Delete breakpoints:</li>
+    <ul>
+        <br/>
+        <li><code>disable</code>: disable all breakpoints.</li>
+        <br/>
+        <li><code>disable &lt;id&gt;</code> or <code>disable &lt;start-id&gt;-&lt;end-id&gt;</code>: disable specific breakpoint(s).</li>
+        <br/>
+        <li><code>enable</code>: enable all breakpoints.</li>
+        <br/>
+        <li><code>enable &lt;id&gt;</code> or <code>enable &lt;start-id&gt;-&lt;end-id&gt;</code>: enable specific breakpoint(s).</li>
+        <br/>
+        <li><code>delete</code>: delete all breakpoints.</li>
+        <br/>
+        <li><code>delete &lt;id&gt;</code> or <code>delete &lt;start-id&gt;-&lt;end-id&gt;</code>: delete specific breakpoint(s).</li>
+        <br/>
+    </ul>
     <br/>
     <br/>
-    <li>Clear breakpoints at a location:</li>
+    <li>Clear breakpoints at a location (without knowing breakpoint ID):<br/><br/>
+        <code>(gdb) clear foo.c:42</code><br/><br/>
+        <code>(gdb) clear my_func</code>
+    </li>
     <br/>
     <br/>
-    <li>Conditional breakpoint:</li>
+    <li>Conditional breakpoint: <code>break foo if i &gt; 10 &amp;&amp; p != NULL</code></li>
     <br/>
     <br/>
-    <li>Ignore first N hits of the breakpoint:</li>
-    <br/>
-    <br/>
-    <li></li>
+    <li>Ignore first 10 hits of the breakpoint 5: <code>ignore 5 10</code></li>
     <br/>
 </ol>
 <br/>
