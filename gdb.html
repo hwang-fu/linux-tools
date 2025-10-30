@@ -332,9 +332,92 @@ g++ -g main.cpp -o main   # for C++
 <!-- * * * * * * * * * * * * * * -->
 <h3>Inspecting variables and memory (<a href="#summary">print</a>)</h3>
 <ol>
-    <li></li>
+    <li>To print a value:
+<pre><code>
+    (gdb) print i
+    (gdb) print &amp;i
+    (gdb) print a + b
+    (gdb) print *ptr
+    (gdb) print arr[3]
+    (gdb) print *(struct node*)ptr
+    (gdb) print ((int*)buf)[3]
+
+    (gdb) p /x i                # hex
+    (gdb) p /d i                # signed dec
+    (gdb) p /u i                # unsigned dec
+    (gdb) p /t i                # binary
+    (gdb) p /c ch               # char
+</code></pre>
+    </li>
     <br/>
-    <li></li>
+    <br/>
+    <li>Pretty Printer: <code>set print pretty on</code></li>
+    <br/>
+    <br/>
+    <li>Display local variables or arguments:</li>
+<pre><code>
+    (gdb) info locals       # Shows all local variables in the current stack frame.
+    (gdb) info args         # Lists all function arguments for the current stack frame.
+</code></pre>
+    <br/>
+    <br/>
+    <li>Print information about registers:</li>
+<pre><code>
+    (gdb) info registers
+    (gdb) print $pc, print $sp, print $fp     # architecture-specific names valid
+</code></pre>
+    <br/>
+    <br/>
+    <li>Modify during debug (BE CAREFUL):</li>
+<pre><code>
+    (gdb) set var i = 42
+    (gdb) set {int}0x7fffffffde20 = 123
+</code></pre>
+    <br/>
+    <br/>
+    <li>Raw memory inspection: <code>x/[COUNT][FORMAT][SIZE] &lt;ADDRESS&gt;</code></li>
+    <br/>
+    <ul>
+        <li><b><i>COUNT</i></b>: how many units to print (e.g., 16).</li>
+        <br/>
+        <li><b><i>FORMAT</i></b>: how to render each unit.</li>
+        <ul>
+            <br/>
+            <li><code>x</code>: hex.</li>
+            <br/>
+            <li><code>d</code>: dec.</li>
+            <br/>
+            <li><code>u</code>: unsigned.</li>
+            <br/>
+            <li><code>t</code>: binary.</li>
+            <br/>
+            <li><code>c</code>: char.</li>
+            <br/>
+            <li><code>s</code>: c-string (prints chars until '\0').</li>
+            <br/>
+            <li><code>i</code>: instruction.</li>
+            <br/>
+            <li><code>f</code>: float.</li>
+            <br/>
+        </ul>
+        <br/>
+        <li><b><i>SIZE</i></b>: unit byte-width.</li>
+        <ul>
+            <br/>
+            <li><code>b</code>: 1</li>
+            <br/>
+            <li><code>h</code>: 2</li>
+            <br/>
+            <li><code>w</code>: 4</li>
+            <br/>
+            <li><code>g</code>: 8</li>
+            <br/>
+        </ul>
+        <br/>
+        <li><b><i>ADDRESS</i></b>: an address or expression
+            (e.g., <code>0x7fff</code>, <code>ptr</code>, <code>&amp;arr[0]</code>).</li>
+        <br/>
+    </ul>
     <br/>
 </ol>
 <br/>
