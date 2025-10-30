@@ -119,6 +119,7 @@
 <ol>
     <li>GDB stands for GNU Debugger.</li>
     <br/>
+    <br/>
     <li>Before you can debug, you must compile your C/C++ program with the <code>-g</code> flag:</li>
     <pre><code>
 gcc -g main.c   -o main   # for C
@@ -130,6 +131,9 @@ g++ -g main.cpp -o main   # for C++
         <code>gdb --args ./main arg1 arg2</code>
     </li>
     <br/>
+    <br/>
+    <li>Run GDB with <code>-tui</code> will start it looking like GUI in the terminal.<br/>
+        In some terminals you can also call <code>set tui mouse on</code> to activate mouse support.</li>
 </ol>
 <br/>
 <!-- * * * * * * * * * * * * * * -->
