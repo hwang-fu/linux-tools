@@ -117,11 +117,78 @@
 <ol>
     <li>Basic syntax: <code>:[range]s/{pattern}/{replace}/[flags] [count]</code></li>
     <br/>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-    <li></li>
+    <ul>
+        <li><b><i>range</i></b>: where to apply.</li>
+        <ol>
+            <br/>
+            <li><code>no specifier</code>: current line.</li>
+            <br/>
+            <li><code>.</code>: current line.</li>
+            <br/>
+            <li><code>$</code>: last line.</li>
+            <br/>
+            <li><code>line1,line2</code>: range from <i>line1</i> to <i>line2</i>, both inclusive, first line is indexed 1 not 0.</li>
+            <br/>
+            <li><code>%</code>: whole file.</li>
+            <br/>
+            <li><code>1,$</code>: whole file.</li>
+            <br/>
+            <li><code>.,$</code>: from current line to the end.</li>
+            <br/>
+            <li><code>'<,'></code>: visual selection (start / end).</li>
+            <br/>
+            <li><code>line+N</code>: <i>N</i> lines after <i>line</i>.</li>
+            <br/>
+            <li><code>line-N</code>: <i>N</i> lines before <i>line</i>.</li>
+            <br/>
+        </ol>
+        <br/>
+        <li><b><i>pattern</i></b>: regex to find.</li>
+        <ol>
+            <br/>
+            <li><code>\&lt;</code> and <code>\&gt;</code>: word boundaries.</li>
+            <br/>
+            <li><code>^word</code>: start with <i>word</i>.</li>
+            <br/>
+            <li><code>word$</code>: end with <i>word</i>.</li>
+            <br/>
+            <li><code>.</code>: match exactly one character.</li>
+            <br/>
+            <li><code>\</code>: escape special character.</li>
+            <br/>
+            <li><code></code>:</li>
+            <br/>
+        </ol>
+        <br/>
+        <li><b><i>replace</i></b>: what to replace.</li>
+        <ol>
+            <br/>
+            <li><code>\r</code>: newline.</li>
+            <br/>
+            <li><code>\t</code>: tab.</li>
+            <br/>
+        </ol>
+        <br/>
+        <li><b><i>flags</i></b>: behaviors.</li>
+        <ol>
+            <br/>
+            <li><code>g</code>: replace all matches per line.</li>
+            <br/>
+            <li><code>c</code>: confirm each substitution.</li>
+            <br/>
+            <li><code>i</code>: case-insensitive mode.</li>
+            <br/>
+            <li><code>I</code>: case-sensitive mode.</li>
+            <br/>
+            <li><code>n</code>: no change, only highlight.</li>
+            <br/>
+            <li><code>e</code>: no error if nothing found.</li>
+            <br/>
+        </ol>
+        <br/>
+        <li><b><i>count</i></b>: max subs per line (rarely used).</li>
+        <br/>
+    </ul>
     <br/>
 </ol>
 <br/>
