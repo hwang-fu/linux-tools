@@ -125,7 +125,7 @@
         g++ -g main.cpp -o main   # for C++
     </code></pre>
     <br/>
-    <li>Start GBD:<br/><br/>
+    <li>Start GBD (it does not start your program automatically):<br/><br/>
         <code>gdb ./main</code><br/>
         <code>gdb --args ./main arg1 arg2</code>
     </li>
@@ -222,9 +222,14 @@
 <!-- * * * * * * * * * * * * * * -->
 <h3>Running the program (<a href="#summary">run</a>)</h3>
 <ol>
-    <li></li>
+    <li>Basic syntax:<br/><br/>
+        <code>(gdb) run [arguments]</code></li>
     <br/>
-    <li></li>
+    <br/>
+    <li>It will start the program from beginning.</li>
+    <br/>
+    <br/>
+    <li>If you have loaded your program with arguments, you don't have to do it again here.</li>
     <br/>
 </ol>
 <br/>
@@ -237,7 +242,37 @@
 <!-- * * * * * * * * * * * * * * -->
 <h3>Breakpoints (<a href="#summary">break</a>)</h3>
 <ol>
-    <li></li>
+    <li>A breakpoint tells GDB to <i>pause</i> your program at a specific place so you can inspect state (variables, stack, memory) before continuing.</li>
+    <br/>
+    <br/>
+    <li>Set a breakpoint:</li>
+    <ul>
+        <br/>
+        <li></li>
+        <br/>
+        <li></li>
+        <br/>
+        <li></li>
+    </ul>
+    <br/>
+    <br/>
+    <li>Temporary breakpoint (auto-delete on first hit):</li>
+    <br/>
+    <br/>
+    <li>Inspect breakpoints: <code>info break</code> or <code>info breakpoints</code></li>
+    <br/>
+    <br/>
+    <li>Enable / Disable / Delete breakpoints:</li>
+    <br/>
+    <br/>
+    <li>Clear breakpoints at a location:</li>
+    <br/>
+    <br/>
+    <li>Conditional breakpoint:</li>
+    <br/>
+    <br/>
+    <li>Ignore first N hits of the breakpoint:</li>
+    <br/>
     <br/>
     <li></li>
     <br/>
@@ -325,7 +360,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Catchpoints</h3>
 <ol>
     <li></li>
     <br/>
