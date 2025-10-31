@@ -85,7 +85,7 @@
         text-underline-offset: 2px;     /* optional: move it slightly down */
     }
 
-    body {
+    body * {
         font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
     }
 
@@ -94,10 +94,41 @@
     }
 
     code {
-        color: #663300;
-        font-family: "FiraCode Nerd Font";
-        font-size: 11.0
+        color: #24292e;                     /* text */
+        background-color: #f6f8fa;          /* bg */
+        border: 1px solid #d0d7de;          /* subtle frame */
+        border-radius: .375rem;
+        padding: .15rem .35rem;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;                /* 14px-ish; avoid bare numbers */
+        line-height: 1.4;
+        font-variant-ligatures: contextual;
     }
+
+    /* Block code container */
+    pre {
+        margin: 1rem 0;
+        padding: .8rem 1rem;
+        background-color: #f6f8fa;       /* match inline bg */
+        border: 1px solid #d0d7de;
+        border-radius: .5rem;
+        overflow: auto;                   /* scroll if long */
+        tab-size: 4;                      /* adjust as needed */
+    }
+
+    /* Code inside pre: remove extra padding/background from inline style */
+    pre code {
+        display: block;                   /* ensure full-width */
+        padding: 0;                       /* pre handles padding */
+        background: transparent;          /* avoid double bg */
+        border: 0;                        /* avoid double border */
+        color: #24292e;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        white-space: pre;                 /* preserve spacing; use pre-wrap to wrap long lines */
+    }
+
 </style>
 <!-- * * * * * * * * * * * * * * -->
 
@@ -121,10 +152,10 @@
     <br/>
     <br/>
     <li>Before you can debug, you must compile your C/C++ program with the <code>-g</code> flag:</li>
-    <pre><code>
+<pre><code>
 gcc -g main.c   -o main   # for C
 g++ -g main.cpp -o main   # for C++
-    </code></pre>
+</code></pre>
     <br/>
     <li>Start GBD (it does not start your program automatically):<br/><br/>
         <code>gdb ./main</code><br/>
