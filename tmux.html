@@ -169,11 +169,40 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>The real reasons people use tmux</h3>
 <ol>
-    <li></li>
+    <li>Persistence: If you close your terminal or lose your SSH session, everything inside tmux keeps running.</li>
+<pre><code>
+# Start a session
+tmux new -s work
+
+# Do your stuff...
+# Lose connection? No problem.
+
+# Reattach later
+tmux attach -t work
+</code></pre>
     <br/>
-    <li></li>
+    <br/>
+    <li>Multiple panes / windows in one terminal.</li>
+    <br/>
+    <br/>
+    <li>Session management: You can have multiple sessions (e.g., one per project).</li>
+<pre><code>
+tmux new -s projA
+tmux new -s projB
+tmux ls
+tmux attach -t projA
+</code></pre>
+    <br/>
+    <br/>
+    <li>Automation and scripting: tmux can run commands on startup (from <code>.tmux.conf</code> or scripts):</li>
+<pre><code>
+tmux new-session -d -s dev
+tmux new-window -t dev:1 -n "server" "npm run dev"
+tmux new-window -t dev:2 -n "logs" "tail -f /var/log/syslog"
+tmux attach -t dev
+</code></pre>
     <br/>
 </ol>
 <br/>
