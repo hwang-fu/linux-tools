@@ -266,19 +266,57 @@
 <!-- * * * * * * * * * * * * * * -->
 <h3>Branches</h3>
 <ol>
-    <li></li>
+    <li>In Git, a <b>branch</b> is simply a pointer (a reference) to a specific commit in the repo history.<br/>
+        It allows you to develop features, fix bugs, or experiment independently from the main codebase.</li>
     <br/>
     <br/>
-    <li></li>
+    <li>When you create a new Git repository, Git starts with a default branch (it is usually the branch that holds your production-ready code),<br/>
+        commonly named:</li>
+    <ul>
+        <br/>
+        <li><code>main</code> (modern default)</li>
+        <br/>
+        <li><code>master</code> (legacy / default in old versions)</li>
+    </ul>
     <br/>
     <br/>
-    <li></li>
+    <li>A new branch starts at the current commit and lets you diverge from there:</li>
+<pre><code>
+    git checkout -b feature/new-api
+
+    # or (modern syntax)
+    git switch -c feature/new-api
+
+</code></pre>
+    This creates a new branch named feature/new-api starting from wherever you currently are (<b>HEAD</b>), and switches you to it.
     <br/>
     <br/>
-    <li></li>
+    <li><b>HEAD</b> is Git's special pointer to your current branch or commit.<br/>
+        When you checkout a branch, <b>HEAD</b> points to that branch.<br/>
+        When you're in a detached <b>HEAD</b> state (e.g., on a specific commit), <b>HEAD</b> points directly to the commit hash.</li>
     <br/>
     <br/>
-    <li></li>
+    <li>After a feature is merged, you often want to delete the branch:</li>
+<pre><code>
+    git branch -d feature/new-ui                # Local
+    git push origin --delete feature/new-ui     # Remote
+
+</code></pre>
+    <br/>
+    <br/>
+    <li>Push a new branch to GitHub: <code>git push -u origin feature/x</code></li>
+    <br/>
+    <br/>
+    <li>Pull a remote branch: <code>git fetch</code> then <code>git checkout feature/x</code></li>
+    <br/>
+    <br/>
+    <li>List Branches:</li>
+<pre><code>
+    git branch          # local
+    git branch -r       # remote
+    git branch -a       # all
+
+</code></pre>
     <br/>
     <br/>
     <li></li>
