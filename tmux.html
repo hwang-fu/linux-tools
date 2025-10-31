@@ -85,7 +85,11 @@
         text-underline-offset: 2px;     /* optional: move it slightly down */
     }
 
-    body * {
+    body {
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+    }
+
+    table {
         font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
     }
 
@@ -104,6 +108,30 @@
         line-height: 1.4;
         font-variant-ligatures: contextual;
     }
+
+    /* Block code container */
+    pre {
+        margin: 1rem 0;
+        padding: .8rem 1rem;
+        background-color: #f6f8fa;       /* match inline bg */
+        border: 1px solid #d0d7de;
+        border-radius: .5rem;
+        overflow: auto;                   /* scroll if long */
+        tab-size: 4;                      /* adjust as needed */
+    }
+
+    /* Code inside pre: remove extra padding/background from inline style */
+    pre code {
+        display: block;                   /* ensure full-width */
+        padding: 0;                       /* pre handles padding */
+        background: transparent;          /* avoid double bg */
+        border: 0;                        /* avoid double border */
+        color: #24292e;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        white-space: pre;                 /* preserve spacing; use pre-wrap to wrap long lines */
+    }
 </style>
 <!-- * * * * * * * * * * * * * * -->
 
@@ -121,47 +149,16 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>What is tmux?</h3>
 <ol>
-    <li></li>
+    <li><code>tmux</code> = terminal multiplexer</li>
     <br/>
-    <li></li>
     <br/>
-    <li></li>
+    <li>That means it lets one terminal process (the tmux server) manage many sessions, windows, and panes,<br/>
+        all inside the same terminal emulator (like Kitty, Alacritty, Konsole, etc.).</li>
     <br/>
-    <li></li>
     <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
+    <li>So tmux is <b>inside</b> your terminal — not another terminal emulator.</li>
     <br/>
 </ol>
 <br/>
