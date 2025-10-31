@@ -94,9 +94,15 @@
     }
 
     code {
-        color: #663300;
-        font-family: "FiraCode Nerd Font";
-        font-size: 11.0
+        color: #24292e;                     /* text */
+        background-color: #f6f8fa;          /* bg */
+        border: 1px solid #d0d7de;          /* subtle frame */
+        border-radius: .375rem;
+        padding: .15rem .35rem;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;                /* 14px-ish; avoid bare numbers */
+        line-height: 1.4;
+        font-variant-ligatures: contextual;
     }
 </style>
 <!-- * * * * * * * * * * * * * * -->
@@ -203,131 +209,51 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Vim Commands on Files</h3>
 <ol>
-    <li></li>
+    <li>Commonly used ones:</li>
     <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
+    <table>
+        <thead>
+            <tr>
+                <th>Symbol</th>
+                <th>Meaning</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>%</code></td>
+                <td>The current file name</td>
+                <td><code>:! echo %</code> or <code>:echo expand('%')</code> gets <i>main.c</i></td>
+            </tr>
+            <tr>
+                <td><code>%:p</code></td>
+                <td>Full absolute path of the current file</td>
+                <td><code>:! echo %:p</code> or <code>:echo expand('%:p')</code> gets <i>/home/user/proj/src/main.c</i></td>
+            </tr>
+            <tr>
+                <td><code>%:p:h</code></td>
+                <td>Directory (head) of the current file</td>
+                <td><code>:! echo %:p:h</code> or <code>:echo expand('%:p:h')</code> gets <i>/home/user/proj/src</i></td>
+            </tr>
+            <tr>
+                <td><code>%:t</code></td>
+                <td>Tail (basename only)</td>
+                <td><code>:! echo %:t</code> or <code>:echo expand('%:t')</code> gets <i>main.c</i></td>
+            </tr>
+            <tr>
+                <td><code>%:r</code></td>
+                <td>Root (filename without extension)</td>
+                <td><code>:! echo %:r</code> or <code>:echo expand('%:r')</code> gets <i>main</i></td>
+            </tr>
+            <tr>
+                <td><code>%:e</code></td>
+                <td>Extension name only</td>
+                <td><code>:! echo %:e</code> or <code>:echo expand('%:e')</code> gets <i>c</i></td>
+            </tr>
+        </tbody>
+    </table>
     <br/>
 </ol>
 <br/>
