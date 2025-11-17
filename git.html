@@ -815,6 +815,272 @@ git restore --staged largefile.zip
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="git-stash">Git Stash</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li><code>git stash</code> temporarily saves your uncommitted changes without creating a commit.</li>
+        <br/>
+        <li>Stashes are stored in a stack, and you can apply or inspect them later.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Basic Usage: Saving Changes</b></li>
+<pre><code class="language-bash line-numbers">git stash
+</code></pre>
+    <br/>
+    <ul>
+        <li>Moves modified and staged changes into a stash entry.</li>
+        <li>Resets your working directory to a clean state.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git stash save "WIP: working on login feature"
+</code></pre>
+    <br/>
+    <ul>
+        <li>Adds a message to identify the stash entry.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Saving Untracked Files</b></li>
+<pre><code class="language-bash line-numbers">git stash -u
+</code></pre>
+    <ul>
+        <li>Saves both tracked and untracked files.</li>
+    </ul>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git stash -a
+</code></pre>
+    <ul>
+        <li>Saves <u>all</u> changes including ignored files.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Listing Stashes</b></li>
+<pre><code class="language-bash line-numbers">git stash list
+</code></pre>
+
+<pre><code class="language-bash">stash@{0}: WIP on feature/login
+stash@{1}: WIP: fixing UI
+stash@{2}: WIP: initial setup
+</code></pre>
+    <br/>
+    <ul>
+        <li>Stashes are stored in a stack-like structure.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Applying Stashes</b></li>
+<pre><code class="language-bash line-numbers">git stash apply
+</code></pre>
+    <ul>
+        <li>Applies the most recent stash but <u>does not remove it</u> from the stash list.</li>
+    </ul>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git stash apply stash@{2}
+</code></pre>
+    <ul>
+        <li>Applies a specific stash entry.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Applying and Removing a Stash (Pop)</b></li>
+<pre><code class="language-bash line-numbers">git stash pop
+</code></pre>
+    <br/>
+    <ul>
+        <li>Applies the most recent stash and removes it from the list.</li>
+        <li>Equivalent to: apply + remove</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git stash pop stash@{1}
+</code></pre>
+    <br/><br/>
+
+
+    <li><b>Dropping a Stash Entry</b></li>
+<pre><code class="language-bash line-numbers">git stash drop stash@{0}
+</code></pre>
+    <ul>
+        <li>Deletes a stash entry permanently.</li>
+    </ul>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git stash clear
+</code></pre>
+    <ul>
+        <li>Deletes all stash entries.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Stashing Only Staged Changes</b></li>
+<pre><code class="language-bash line-numbers">git stash --staged
+</code></pre>
+    <ul>
+        <li>Saves only staged changes, leaving working directory untouched.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Stashing Only Specific Files</b></li>
+<pre><code class="language-bash line-numbers">git stash -m "WIP: styling" css/style.css
+</code></pre>
+    <ul>
+        <li>Stashes only the provided file(s).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Showing the Contents of a Stash</b></li>
+<pre><code class="language-bash line-numbers">git stash show
+</code></pre>
+    <ul>
+        <li>Shows which files were changed.</li>
+    </ul>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git stash show -p stash@{1}
+</code></pre>
+    <ul>
+        <li>Shows the full diff patch.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Creating a Branch from a Stash</b></li>
+<pre><code class="language-bash line-numbers">git stash branch feature/login-fix stash@{0}
+</code></pre>
+    <ul>
+        <li>Creates a new branch with changes applied.</li>
+        <li>Useful if the stash contains large or important work.</li>
+        <li>Automatically drops the stash after application.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Handling Merge Conflicts During Pop/Apply</b></li>
+<pre><code class="language-bash line-numbers">git stash pop
+# conflict markers appear
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>If conflicts appear:
+            <ul>
+                <li>resolve them manually</li>
+                <li>then stage resolved files</li>
+                <li>and commit or continue working</li>
+            </ul>
+        </li>
+        <br/>
+        <li><code>stash pop</code> will not delete the stash if conflicts occur.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Common Stash Workflow Examples</b></li>
+    <br/>
+    <ul>
+        <li><b>Example 1: Save work, switch branch, restore</b></li>
+    </ul>
+<pre><code class="language-bash line-numbers">git stash
+git switch main
+git pull
+git switch feature/login
+git stash pop
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example 2: Stashing new files</b></li>
+    </ul>
+<pre><code class="language-bash line-numbers">git stash -u
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example 3: Stash one file only</b></li>
+    </ul>
+<pre><code class="language-bash line-numbers">git stash push -m "partial fix" app.js
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example 4: Create a branch from a stash</b></li>
+    </ul>
+<pre><code class="language-bash line-numbers">git stash branch hotfix stash@{1}
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Summary of git stash Commands</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>git stash</code></td>
+                <td>Save tracked modified files</td>
+            </tr>
+            <tr>
+                <td><code>git stash -u</code></td>
+                <td>Save tracked + untracked files</td>
+            </tr>
+            <tr>
+                <td><code>git stash apply</code></td>
+                <td>Apply stash without removing</td>
+            </tr>
+            <tr>
+                <td><code>git stash pop</code></td>
+                <td>Apply and remove stash</td>
+            </tr>
+            <tr>
+                <td><code>git stash list</code></td>
+                <td>Show all stash entries</td>
+            </tr>
+            <tr>
+                <td><code>git stash show -p</code></td>
+                <td>Show stash diff</td>
+            </tr>
+            <tr>
+                <td><code>git stash drop</code></td>
+                <td>Delete one stash entry</td>
+            </tr>
+            <tr>
+                <td><code>git stash clear</code></td>
+                <td>Delete all stashes</td>
+            </tr>
+            <tr>
+                <td><code>git stash branch name stash@{n}</code></td>
+                <td>Create branch with stashed changes applied</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+</ol>
+<br/>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
 
 <!-- * * * * * * * * * * * * * * -->
 
