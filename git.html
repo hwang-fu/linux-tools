@@ -1922,6 +1922,379 @@ origin  https://github.com/user/repo.git (push)
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="git-config">Git Config</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li><code>git config</code> is the command used to view, edit, and manage Git configuration settings.</li>
+        <br/>
+        <li>These settings control Git’s behavior, identity, colors, default editor, merge tool, aliases, and much more.</li>
+        <br/>
+        <li>Git has 3 levels of configuration:</li>
+        <ul>
+            <li><b>System</b>: applies to all users on the system (e.g., <code>/etc/gitconfig</code>)</li>
+            <li><b>Global</b>: applies to the current user (e.g., <code>~/.gitconfig</code>)</li>
+            <li><b>Local</b>: applies only to the current repository (<code>.git/config</code>)</li>
+        </ul>
+        <br/>
+        <li>Configuration levels override each other in this order:</li>
+        <ul>
+            <li>Local &gt; Global &gt; System</li>
+        </ul>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Viewing Configuration</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git config --list
+</code></pre>
+
+    <ul>
+        <li>Displays all configuration values Git sees (local + global + system).</li>
+        <br/>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global --list
+</code></pre>
+
+    <ul>
+        <li>Shows only global-level config.</li>
+        <br/>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --get user.name
+</code></pre>
+
+    <ul>
+        <li>Shows a specific configuration value.</li>
+        <br/>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --show-origin user.email
+</code></pre>
+
+    <ul>
+        <li>Shows where a setting came from (useful for debugging).</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Setting Up Identity</b></li>
+    <br/>
+    <ul>
+        <li>These must be set before making commits:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global user.name "Your Name"
+git config --global user.email "username@example.com"
+</code></pre>
+
+    <ul>
+        <li>The <code>--global</code> flag writes to <code>~/.gitconfig</code>.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config user.name "Local Repo Name"
+</code></pre>
+
+    <ul>
+        <li>Sets identity only for the current repository.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Editing Configuration Files Directly</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git config --global --edit
+</code></pre>
+
+    <ul>
+        <li>Opens <code>~/.gitconfig</code> in your default editor.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --local --edit
+</code></pre>
+
+    <ul>
+        <li>Opens <code>.git/config</code> in the current project.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Configuring the Default Editor</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git config --global core.editor "nvim"
+</code></pre>
+
+    <ul>
+        <li>Sets the editor used for commit messages and merges.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global core.editor "code --wait"
+</code></pre>
+
+    <ul>
+        <li>VS Code example: waits until the window closes.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Configuring Default Branch Name</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git config --global init.defaultBranch main
+</code></pre>
+
+    <ul>
+        <li>Ensures newly created repos use <code>main</code> instead of <code>master</code>.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Configuring Line Endings</b></li>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git config --global core.autocrlf input
+</code></pre>
+
+    <ul>
+        <li><code>input</code> – convert CRLF to LF on commit (recommended for macOS/Linux).</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global core.autocrlf true
+</code></pre>
+
+    <ul>
+        <li><code>true</code> – checkout CRLF, commit LF (for Windows).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Aliases: Custom Git Commands</b></li>
+    <br/>
+    <ul>
+        <li>Aliases shorten long commands:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global alias.st "status"
+git config --global alias.co "checkout"
+git config --global alias.br "branch"
+git config --global alias.ci "commit"
+</code></pre>
+
+    <ul>
+        <li>Complex example:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global alias.lg "log --oneline --graph --decorate --all"
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Using it:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git lg
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Configuring Merge & Diff Tools</b></li>
+    <br/>
+    <ul>
+        <li>To use an external merge tool:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global merge.tool vimdiff
+git config --global mergetool.keepBackup false
+</code></pre>
+
+    <ul>
+        <li>To set diff tool (example: VS Code):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global diff.tool vscode
+git config --global difftool.vscode.cmd "code --wait --diff $LOCAL $REMOTE"
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Configure Pull Behavior (Merge vs Rebase)</b></li>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git config --global pull.rebase false
+</code></pre>
+
+    <ul>
+        <li>Default: merge on pull.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global pull.rebase true
+</code></pre>
+
+    <ul>
+        <li>Use rebase instead of merge for <code>git pull</code>.</li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>Configuring Push Behavior</b></li>
+    <br/>
+    <ul>
+        <li>Push only the current branch (recommended modern behavior):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global push.default current
+</code></pre>
+
+    <ul>
+        <li>Other options:</li>
+        <ul>
+            <li><code>simple</code> – safe default</li>
+            <li><code>upstream</code> – push to the upstream branch</li>
+            <li><code>matching</code> – push all matching branch names (dangerous)</li>
+        </ul>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Enabling Colored Output</b></li>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git config --global color.ui auto
+</code></pre>
+
+    <ul>
+        <li>Makes Git output more readable with colors.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global color.diff auto
+git config --global color.status auto
+git config --global color.branch auto
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Configuring Credential Caching</b></li>
+    <br/>
+    <ul>
+        <li>Cache credentials temporarily:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global credential.helper cache
+</code></pre>
+
+    <ul>
+        <li>Cache for 1 hour:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global credential.helper "cache --timeout=3600"
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Store credentials permanently (not recommended):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global credential.helper store
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Configuring HTTPS vs SSH</b></li>
+    <br/>
+    <ul>
+        <li>Force Git to use SSH:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global url."ssh://git@github.com/".insteadOf "https://github.com/"
+</code></pre>
+
+    <ul>
+        <li>Now any HTTPS GitHub URL automatically becomes SSH.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Unsetting (Removing) a Config Value</b></li>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git config --global --unset user.email
+</code></pre>
+
+    <ul>
+        <li>Removes the value from the config file.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --unset-all alias.lg
+</code></pre>
+
+    <ul>
+        <li>Removes all entries with that name.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Summary</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>git config --list</code></td>
+                <td>View all effective config values.</td>
+            </tr>
+            <tr>
+                <td><code>git config --global user.name</code></td>
+                <td>Set username globally.</td>
+            </tr>
+            <tr>
+                <td><code>git config --edit</code></td>
+                <td>Edit config file using editor.</td>
+            </tr>
+            <tr>
+                <td><code>git config --global alias.xxx</code></td>
+                <td>Create a custom shorthand command.</td>
+            </tr>
+            <tr>
+                <td><code>git config --global core.editor</code></td>
+                <td>Set default editor.</td>
+            </tr>
+            <tr>
+                <td><code>git config --global pull.rebase true</code></td>
+                <td>Make <code>git pull</code> use rebase by default.</td>
+            </tr>
+            <tr>
+                <td><code>git config --unset key</code></td>
+                <td>Remove a config value.</td>
+            </tr>
+            <tr>
+                <td><code>git config --show-origin key</code></td>
+                <td>Show where config was defined.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/><br/>
+</ol>
+<br/>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
 
 <!-- * * * * * * * * * * * * * * -->
 
