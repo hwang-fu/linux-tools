@@ -1,0 +1,443 @@
+<!-- * * * * * * * * * * * * * * -->
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>SED</title>
+
+    <!-- Theme (pick any from Prism site) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.css">
+
+    <!-- Prism core + Lisp language -->
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js"
+            data-prismjs-autoloader-path="https://cdn.jsdelivr.net/npm/prismjs/components/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
+<style>
+    table {
+        border-collapse: collapse;      /* merge borders so you don't get double lines */
+        width: 100%;                    /* optional: make it full width */
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+        font-size: 14px;
+    }
+
+    th {
+        background-color: #f5f5f5;      /* light gray header background */
+        text-align: left;               /* header text alignment */
+        font-weight: 600;
+    }
+
+    th, td {
+        border: 1px solid #ddd;         /* subtle border color */
+        padding: 8px 12px;              /* breathing room */
+    }
+
+    tr:nth-child(even) {
+        background-color: #fafafa;      /* zebra striping for readability */
+    }
+
+    tr:hover {
+        background-color: #f0f8ff;      /* light hover highlight */
+    }
+
+    .comment {
+        color: grey;
+    }
+
+    .token.keyword {
+        font-weight: 500;
+    }
+    /*
+    .token.comment {
+        color: #888;
+    }
+    */
+
+    .red-underline {
+        text-decoration-line: underline;
+        text-decoration-color: red;
+        text-decoration-thickness: 2px; /* optional: make it a bit thicker */
+        text-underline-offset: 2px;     /* optional: move it slightly down */
+    }
+
+    body {
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+        font-variant-ligatures: none;
+    }
+
+    ul > li {
+        list-style-type: disc;
+    }
+
+    code {
+        color: #24292e;                     /* text */
+        background-color: #f6f8fa;          /* bg */
+        border: 1px solid #d0d7de;          /* subtle frame */
+        border-radius: .375rem;
+        padding: .15rem .35rem;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;                /* 14px-ish; avoid bare numbers */
+        line-height: 1.4;
+    }
+
+    /* Block code container */
+    pre {
+        margin: 1rem 0;
+        padding: .8rem 1rem;
+        background-color: #f6f8fa;       /* match inline bg */
+        border: 1px solid #d0d7de;
+        border-radius: .5rem;
+        overflow: auto;                   /* scroll if long */
+        tab-size: 4;                      /* adjust as needed */
+    }
+
+    /* Code inside pre: remove extra padding/background from inline style */
+    pre code {
+        display: block;                   /* ensure full-width */
+        padding: 0;                       /* pre handles padding */
+        background: transparent;          /* avoid double bg */
+        border: 0;                        /* avoid double border */
+        color: #24292e;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        white-space: pre;                 /* preserve spacing; use pre-wrap to wrap long lines */
+    }
+</style>
+</head>
+<!-- * * * * * * * * * * * * * * -->
+<body>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+<h3 id="linux-sed">Sed in Linux</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li><code>sed</code> (Stream Editor) is a powerful Unix tool used for:
+            <ul>
+                <li>searching</li>
+                <li>filtering</li>
+                <li>substituting</li>
+                <li>modifying text</li>
+                <li>batch editing files</li>
+            </ul>
+        </li>
+        <br/>
+        <li><code>sed</code> works on a stream of text line-by-line.</li>
+        <li>It is especially powerful for automation, scripting, and command-line text processing.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Basic Syntax</b></li>
+<pre><code class="language-bash line-numbers">sed 'command' filename
+</code></pre>
+    <br/>
+    <ul>
+        <li>Commands are placed inside single quotes.</li>
+        <li><code>sed</code> supports many editing commands; the most common is <code>s</code> for substitution.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Print File Contents (Default Behavior)</b></li>
+<pre><code class="language-bash line-numbers">sed '' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li><code>sed</code> always prints each processed line unless told otherwise.</li>
+        <li><code>''</code> means "no modifications."</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Substitution Command (<code>s</code>)</b></li>
+<pre><code class="language-bash line-numbers">sed 's/old/new/' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li>Replaces the first occurrence of <code>old</code> with <code>new</code> in each line.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Global Replacement (<code>g</code>)</b></li>
+<pre><code class="language-bash line-numbers">sed 's/foo/bar/g' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li><code>g</code> means "replace all occurrences per line."</li>
+        <li>Without <code>g</code>, only the first match is replaced.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Using Different Delimiters</b></li>
+<pre><code class="language-bash line-numbers">sed 's|/usr/local|/opt/apps|' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li><code>|</code> or <code>#</code> can be used as delimiters when the text contains slashes.</li>
+        <li>Makes commands much easier to read.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Edit File In-Place (<code>-i</code>)</b></li>
+<pre><code class="language-bash line-numbers">sed -i 's/foo/bar/g' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li>Modifies the file directly.</li>
+        <li>Use cautiously: changes cannot be undone unless you specify backup.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sed -i.bak 's/foo/bar/g' file.txt
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Creates <code>file.txt.bak</code> before modifying.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Print Specific Lines</b></li>
+<pre><code class="language-bash line-numbers">sed -n '3p' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li><code>-n</code> disables automatic printing.</li>
+        <li><code>3p</code> prints line 3.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sed -n '5,8p' file.txt   # print lines 5 to 8
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Delete Lines</b></li>
+<pre><code class="language-bash line-numbers">sed '3d' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li>Deletes line 3.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sed '2,5d' file.txt      # delete lines 2 to 5
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Useful for cleaning text files or logs.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Insert and Append Lines</b></li>
+
+<pre><code class="language-bash line-numbers">sed '3i This is an inserted line' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li><code>i</code> inserts before a line.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sed '3a This is an appended line' file.txt
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><code>a</code> appends after a line.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Replace a Whole Line</b></li>
+<pre><code class="language-bash line-numbers">sed '4c This replaces line 4 completely' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li><code>c</code> replaces an entire line with new content.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Using Patterns Instead of Line Numbers</b></li>
+<pre><code class="language-bash line-numbers">sed '/error/d' file.log
+</code></pre>
+    <br/>
+    <ul>
+        <li>Deletes all lines containing the word <code>error</code>.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sed '/BEGIN/,/END/p' config.txt
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Works with ranges defined by patterns.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Multiple Commands</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">sed -e 's/foo/bar/' -e 's/x/y/' file.txt
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Apply multiple operations in order.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sed '
+    s/foo/bar/g
+    s/apple/orange/g
+' file.txt
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Commands can also be written on multiple lines.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Advanced Example: Remove Empty Lines</b></li>
+<pre><code class="language-bash line-numbers">sed '/^$/d' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li><code>^$</code> matches empty lines.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Advanced Example: Remove Trailing Spaces</b></li>
+<pre><code class="language-bash line-numbers">sed 's/[ ]*$//' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li>Replaces trailing spaces with nothing.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Advanced Example: Replace Only on Matching Lines</b></li>
+<pre><code class="language-bash line-numbers">sed '/error/ s/failed/FAILED/' file.txt
+</code></pre>
+    <br/>
+    <ul>
+        <li>Only lines containing <code>error</code> will have <code>failed</code> replaced.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Hold Space and Pattern Space (For Advanced Users)</b></li>
+    <br/>
+    <ul>
+        <li><code>sed</code> maintains two memory areas:
+            <ul>
+                <li><b>pattern space</b> — the current line</li>
+                <li><b>hold space</b> — temporary buffer</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Commands like <code>h</code>, <code>H</code>, <code>g</code>, <code>G</code> allow advanced line manipulation.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sed 'h; $!d; x' file.txt
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>This swaps first and last lines (example of advanced usage).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Summary of Common sed Commands</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>Description</th>
+                <th>Example</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>s/a/b/</code></td>
+                <td>Substitute first occurrence</td>
+                <td><code>s/foo/bar/</code></td>
+            </tr>
+            <tr>
+                <td><code>s/a/b/g</code></td>
+                <td>Substitute all occurrences</td>
+                <td><code>s/old/new/g</code></td>
+            </tr>
+            <tr>
+                <td><code>p</code></td>
+                <td>Print</td>
+                <td><code>-n '3p'</code></td>
+            </tr>
+            <tr>
+                <td><code>d</code></td>
+                <td>Delete</td>
+                <td><code>'/error/d'</code></td>
+            </tr>
+            <tr>
+                <td><code>i</code></td>
+                <td>Insert before</td>
+                <td><code>'3i text'</code></td>
+            </tr>
+            <tr>
+                <td><code>a</code></td>
+                <td>Append after</td>
+                <td><code>'3a text'</code></td>
+            </tr>
+            <tr>
+                <td><code>c</code></td>
+                <td>Replace line</td>
+                <td><code>'4c new text'</code></td>
+            </tr>
+            <tr>
+                <td><code>-i</code></td>
+                <td>Edit file in-place</td>
+                <td><code>-i 's/a/b/' file</code></td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <ul>
+        <li><code>sed</code> is one of the most powerful Linux text processing tools.</li>
+        <li>It is essential for shell scripting, automation, DevOps, and log manipulation.</li>
+        <li>Mastering <code>sed</code> significantly improves your productivity on Linux systems.</li>
+    </ul>
+
+    <br/><br/>
+</ol>
+<br/>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+<!-- * * * * * * * * * * * * * * -->
+
+<footer>
+    <p>&copy; 2025 Hwangfucius. All rights reserved.</p>
+</footer>
+</body>
+<!-- * * * * * * * * * * * * * * -->
+</html>
+<!-- * * * * * * * * * * * * * * -->
