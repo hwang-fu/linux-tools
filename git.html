@@ -1,9 +1,16 @@
 <!-- * * * * * * * * * * * * * * -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.css">
+<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js"
+        data-prismjs-autoloader-path="https://cdn.jsdelivr.net/npm/prismjs/components/"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
 <style>
     table {
         border-collapse: collapse;      /* merge borders so you don't get double lines */
         width: 100%;                    /* optional: make it full width */
-        font-family: system-ui, sans-serif;
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
         font-size: 14px;
     }
 
@@ -85,12 +92,13 @@
         text-underline-offset: 2px;     /* optional: move it slightly down */
     }
 
-    body {
-        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+    .comment {
+        color: grey;
     }
 
-    table {
+    body {
         font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+        font-variant-ligatures: none;
     }
 
     ul > li {
@@ -106,7 +114,6 @@
         font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
         font-size: 0.875rem;                /* 14px-ish; avoid bare numbers */
         line-height: 1.4;
-        font-variant-ligatures: contextual;
     }
 
     /* Block code container */
@@ -281,12 +288,10 @@
     <br/>
     <br/>
     <li>A new branch starts at the current commit and lets you diverge from there:</li>
-<pre><code>
-    git checkout -b feature/new-api
+<pre><code class="language-bash line-numbers">git checkout -b feature/new-api
 
-    # or (modern syntax)
-    git switch -c feature/new-api
-
+# or (modern syntax)
+git switch -c feature/new-api
 </code></pre>
     This creates a new branch named feature/new-api starting from wherever you currently are (<b>HEAD</b>), and switches you to it.
     <br/>
@@ -298,10 +303,8 @@
     <br/>
     <br/>
     <li>After a feature is merged, you often want to delete the branch:</li>
-<pre><code>
-    git branch -d feature/new-ui                # Local
-    git push origin --delete feature/new-ui     # Remote
-
+<pre><code class="language-bash line-numbers">git branch -d feature/new-ui                # Local
+git push origin --delete feature/new-ui     # Remote
 </code></pre>
     <br/>
     <br/>
@@ -312,36 +315,28 @@
     <br/>
     <br/>
     <li>List Branches:</li>
-<pre><code>
-    git branch          # local
-    git branch -r       # remote
-    git branch -a       # all
-
+<pre><code class="language-bash line-numbers">git branch          # local
+git branch -r       # remote
+git branch -a       # all
 </code></pre>
     <br/>
     <br/>
     <li>General format of git branch naming:</li>
-<pre><code>
-    &lt;type&gt;/&lt;short-description&gt;
-    &lt;type&gt;/&lt;issue-number&gt;-&lt;short-description&gt;
-
+<pre><code class="language-bash line-numbers">&lt;type&gt;/&lt;short-description&gt;
+&lt;type&gt;/&lt;issue-number&gt;-&lt;short-description&gt;
 </code></pre>
     <br/>
     <br/>
     <li>Links youor current local branch to the remote-tracking branch:</li>
-<pre><code>
-    # assuming you're in the local branch "feature/generic",
-    # and you wish to link it with the "feature/generic" in the origin remote repo.
-    git branch --set-upstream-to=origin/feature/generic
-
+<pre><code class="language-bash line-numbers"># assuming you're in the local branch "feature/generic",
+# and you wish to link it with the "feature/generic" in the origin remote repo.
+git branch --set-upstream-to=origin/feature/generic
 </code></pre>
     <br/>
     <br/>
     <li>Push a local branch to the remote and set upstream.</li>
-<pre><code>
-    git checkout -b &lt;branch-name&gt;
-    git push -u origin &lt;branch-name&gt;
-
+<pre><code class="language-bash line-numbers">git checkout -b &lt;branch-name&gt;
+git push -u origin &lt;branch-name&gt;
 </code></pre>
     <br/>
 </ol>
@@ -353,14 +348,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
@@ -368,14 +356,15 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+
 <!-- * * * * * * * * * * * * * * -->
 
 
