@@ -1638,6 +1638,290 @@ git config --global alias.pl "pull --rebase"
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="git-remote">Git Remote</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li>A <code>remote</code> in Git is a reference (a named pointer) to another repository, usually hosted online (e.g., GitHub, GitLab, Bitbucket).</li>
+        <br/>
+        <li>Remotes let your local repository communicate by:</li>
+        <ul>
+            <li>fetching new commits</li>
+            <li>pushing your commits</li>
+            <li>tracking branches on the remote server</li>
+        </ul>
+        <br/>
+        <li>The default remote is usually named <code>origin</code>.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Viewing Existing Remotes</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git remote
+</code></pre>
+
+    <ul>
+        <li>Shows remote names only.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git remote -v
+</code></pre>
+
+    <ul>
+        <li>Shows remote names and their URLs (fetch + push URLs).</li>
+    </ul>
+
+<pre><code class="language-bash">origin  https://github.com/user/repo.git (fetch)
+origin  https://github.com/user/repo.git (push)
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Adding a Remote</b></li>
+    <br/>
+    <ul>
+        <li>Add a remote repository named <code>origin</code>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git remote add origin https://github.com/user/repo.git
+</code></pre>
+
+    <ul>
+        <li>Common use when:</li>
+        <ul>
+            <li>You cloned from local folder and want to connect it online.</li>
+            <li>You want to work with multiple remotes.</li>
+        </ul>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Removing a Remote</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git remote remove origin
+</code></pre>
+
+    <ul>
+        <li>Deletes the reference to the remote repository.</li>
+        <li>This does <u>not</u> delete local branches or commits.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git remote rm origin
+</code></pre>
+
+    <ul>
+        <li>Alias for the same action.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Renaming a Remote</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git remote rename origin upstream
+</code></pre>
+
+    <ul>
+        <li>Useful when working with forked repositories:</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Changing the URL of a Remote</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git remote set-url origin https://github.com/newuser/newrepo.git
+</code></pre>
+
+    <ul>
+        <li>Required when:</li>
+        <ul>
+            <li>You renamed your GitHub repository.</li>
+            <li>You changed HTTPS → SSH or vice versa.</li>
+        </ul>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git remote set-url origin git@github.com:user/repo.git
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Fetching From a Remote</b></li>
+    <br/>
+    <ul>
+        <li>Fetch all remotes:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch
+</code></pre>
+
+    <ul>
+        <li>Fetch from a specific remote:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch origin
+</code></pre>
+
+    <ul>
+        <li>This updates remote-tracking branches (e.g. <code>origin/main</code>) but does NOT touch your local branches.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Pushing to a Remote</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git push origin main
+</code></pre>
+
+    <ul>
+        <li>Pushes your local <code>main</code> branch to <code>origin/main</code>.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git push -u origin feature/api
+</code></pre>
+
+    <ul>
+        <li>Creates the branch on the remote and sets upstream tracking.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Inspecting a Remote in Detail</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers">git remote show origin
+</code></pre>
+
+    <ul>
+        <li>This displays:</li>
+        <ul>
+            <li>Remote URL</li>
+            <li>Tracked branches</li>
+            <li>Local→remote branch relationships</li>
+            <li>Push &amp; fetch configuration</li>
+        </ul>
+    </ul>
+
+<pre><code class="language-bash">
+* remote origin
+  Fetch URL: https://github.com/user/repo.git
+  Push  URL: https://github.com/user/repo.git
+  HEAD branch: main
+  Local branches configured for 'git pull':
+    main merges with remote main
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Working With Multiple Remotes</b></li>
+    <br/>
+    <ul>
+        <li>You can have more than one remote:</li>
+        <ul>
+            <li><code>origin</code> → your GitHub repo</li>
+            <li><code>upstream</code> → original project</li>
+            <li><code>backup</code> → a mirrored backup</li>
+        </ul>
+        <br/>
+        <li>Add upstream:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git remote add upstream https://github.com/original/project.git
+</code></pre>
+
+    <ul>
+        <li>Fetch upstream’s changes:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch upstream
+</code></pre>
+
+    <ul>
+        <li>Merge upstream into your main branch:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git merge upstream/main
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Removing Orphaned Remote Branch References</b></li>
+    <br/>
+    <ul>
+        <li>If a branch was deleted on the remote, your local <code>origin/branch</code> reference remains until cleanup.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch --prune
+</code></pre>
+
+    <ul>
+        <li>This removes remote-tracking branches that no longer exist on the server.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Summary Table</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>git remote -v</code></td>
+                <td>Show all remotes with their URLs.</td>
+            </tr>
+            <tr>
+                <td><code>git remote add name url</code></td>
+                <td>Add a new remote.</td>
+            </tr>
+            <tr>
+                <td><code>git remote remove name</code></td>
+                <td>Remove an existing remote.</td>
+            </tr>
+            <tr>
+                <td><code>git remote rename old new</code></td>
+                <td>Rename a remote.</td>
+            </tr>
+            <tr>
+                <td><code>git remote set-url name url</code></td>
+                <td>Change the URL of a remote.</td>
+            </tr>
+            <tr>
+                <td><code>git remote show name</code></td>
+                <td>Inspect remote details.</td>
+            </tr>
+            <tr>
+                <td><code>git fetch name</code></td>
+                <td>Download new commits from the remote.</td>
+            </tr>
+            <tr>
+                <td><code>git push name branch</code></td>
+                <td>Upload local commits to the remote.</td>
+            </tr>
+            <tr>
+                <td><code>git fetch --prune</code></td>
+                <td>Remove stale remote-tracking branches.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/><br/>
+</ol>
+<br/>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
 
 <!-- * * * * * * * * * * * * * * -->
 
