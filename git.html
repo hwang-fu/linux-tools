@@ -1355,6 +1355,289 @@ git merge main
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="git-fetch-pull">Git Fetch vs Git Pull</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li>Both <code>git fetch</code> and <code>git pull</code> are used to get changes from a remote repository (e.g., GitHub) into your local repository.</li>
+        <br/>
+        <li>The key difference:</li>
+        <ul>
+            <li><code>git fetch</code> <u>only downloads</u> changes from remote; it does <u>not</u> modify your current branch.</li>
+            <li><code>git pull</code> downloads changes <u>and immediately integrates</u> them into your current branch (via merge or rebase).</li>
+        </ul>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>How Git Stores Remote Changes</b></li>
+    <br/>
+    <ul>
+        <li>When working with remotes, Git uses <u>remote-tracking branches</u>, such as:</li>
+        <ul>
+            <li><code>origin/main</code></li>
+            <li><code>origin/feature/login</code></li>
+        </ul>
+        <br/>
+        <li>Your local branch (e.g. <code>main</code>) usually <u>tracks</u> a remote branch (e.g. <code>origin/main</code>).</li>
+        <br/>
+        <li><code>git fetch</code> updates these remote-tracking branches.</li>
+        <li><code>git pull</code> updates them <u>and</u> tries to bring your current branch up to date as well.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>git fetch: Download Only</b></li>
+    <br/>
+    <ul>
+        <li>Fetch changes from the default remote (<code>origin</code>):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch
+</code></pre>
+
+    <ul>
+        <li>Fetch from a specific remote and branch:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch origin main
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>What happens after <code>git fetch</code>:</li>
+        <ul>
+            <li>New commits are downloaded to your local <code>.git</code> database.</li>
+            <li>Remote-tracking branches like <code>origin/main</code> are updated.</li>
+            <li>Your current branch (e.g. <code>main</code>) remains unchanged.</li>
+        </ul>
+        <br/>
+        <li>You can now inspect the changes <u>before</u> merging:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git log HEAD..origin/main --oneline
+git diff HEAD..origin/main
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Typical usage: safe way to see what others pushed without touching your working tree.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>git pull: Fetch + Integrate</b></li>
+    <br/>
+    <ul>
+        <li><code>git pull</code> is essentially:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch
+git merge origin/&lt;your-branch&gt;
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Basic usage:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git pull
+</code></pre>
+
+    <ul>
+        <li>If your current branch tracks <code>origin/main</code>:</li>
+        <ul>
+            <li>Git fetches new commits from <code>origin</code>.</li>
+            <li>Then merges <code>origin/main</code> into your local <code>main</code>.</li>
+            <li>This may create a merge commit or cause merge conflicts.</li>
+        </ul>
+    </ul>
+    <br/>
+
+    <ul>
+        <li>You can also tell Git to rebase instead of merge:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git pull --rebase
+</code></pre>
+
+    <ul>
+        <li>This is roughly:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git fetch
+git rebase origin/&lt;your-branch&gt;
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Typical usage: quickly bring your branch up to date when you are comfortable with merge/rebase happening immediately.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Step-by-Step Comparison</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Aspect</th>
+                <th><code>git fetch</code></th>
+                <th><code>git pull</code></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Updates remote-tracking branches?</td>
+                <td>Yes</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Updates current local branch?</td>
+                <td>No</td>
+                <td>Yes (merge or rebase)</td>
+            </tr>
+            <tr>
+                <td>Risk of merge conflicts right away?</td>
+                <td>No (nothing merged yet)</td>
+                <td>Yes (integration happens immediately)</td>
+            </tr>
+            <tr>
+                <td>Good for reviewing incoming changes?</td>
+                <td>Excellent</td>
+                <td>Possible, but history already changed</td>
+            </tr>
+            <tr>
+                <td>Typical use case</td>
+                <td>Inspect, compare, then decide how to merge</td>
+                <td>Fast update to latest remote state</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Example: Using git fetch for Safe Updates</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers"># 1. Download changes only
+git fetch origin
+
+# 2. See what changed on origin/main
+git log HEAD..origin/main --oneline
+
+# 3. Merge (or rebase) when you're ready
+git merge origin/main
+# or
+git rebase origin/main
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Advantages:</li>
+        <ul>
+            <li>You stay in control of when and how history is integrated.</li>
+            <li>You can avoid surprises or conflicts while you are in the middle of work.</li>
+        </ul>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Example: Quick Update with git pull</b></li>
+    <br/>
+<pre><code class="language-bash line-numbers"># On branch main, tracking origin/main
+git pull
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>If there are no conflicts, your <code>main</code> is now at the same commit as <code>origin/main</code>.</li>
+        <br/>
+        <li>For linear history lovers:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git pull --rebase
+</code></pre>
+
+    <ul>
+        <li>This rewrites your local commits on top of the latest remote commits.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>When to Use Which?</b></li>
+    <br/>
+    <ul>
+        <li>Prefer <code>git fetch</code> when:</li>
+        <ul>
+            <li>You want to review incoming changes before integrating.</li>
+            <li>You are in the middle of something and do not want merge conflicts now.</li>
+            <li>You are debugging or inspecting remote history.</li>
+        </ul>
+        <br/>
+        <li>Prefer <code>git pull</code> when:</li>
+        <ul>
+            <li>You simply want your branch up to date with the remote.</li>
+            <li>You are okay with Git performing merge or rebase automatically.</li>
+            <li>You are in a clean working state (no uncommitted local changes).</li>
+        </ul>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Common Aliases and Configs</b></li>
+    <br/>
+    <ul>
+        <li>Some people configure Git to always rebase on pull:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global pull.rebase true
+</code></pre>
+
+    <ul>
+        <li>Or define aliases to remind themselves of the difference:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git config --global alias.fp "fetch --prune"
+git config --global alias.pl "pull --rebase"
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Summary</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>What it does</th>
+                <th>Mental Model</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>git fetch</code></td>
+                <td>Download changes from remote, update <code>origin/*</code> branches, leave your current branch untouched.</td>
+                <td>"Update my knowledge of the remote, but do not touch my work."</td>
+            </tr>
+            <tr>
+                <td><code>git pull</code></td>
+                <td>Fetch changes and immediately integrate them into the current branch by merge or rebase.</td>
+                <td>"Download and merge now."</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+</ol>
+<br/>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
 
 <!-- * * * * * * * * * * * * * * -->
 
