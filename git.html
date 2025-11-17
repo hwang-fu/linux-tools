@@ -1081,7 +1081,273 @@ git stash pop
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="git-merge">Git Merge</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li><code>git merge</code> combines the history of one branch into another.</li>
+        <br/>
+        <li>Merging is <u>non-destructive</u>:
+            <ul>
+                <li>it does not rewrite commit history</li>
+                <li>it creates a new commit (merge commit) when needed</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
 
+
+    <li><b>Basic Merge Example</b></li>
+<pre><code class="language-bash line-numbers">git switch main
+git merge feature/login
+</code></pre>
+    <br/>
+    <ul>
+        <li>This merges the <code>feature/login</code> branch into <code>main</code>.</li>
+        <li>If no conflicts and histories diverged, Git creates a merge commit.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Fast-Forward Merge</b></li>
+<pre><code class="language-bash line-numbers">git merge feature/ui
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>If <code>main</code> has not diverged, Git simply moves the branch pointer forward.</li>
+        <li>No merge commit is created.</li>
+    </ul>
+
+<pre><code class="language-bash"># Before:
+main --- A --- B
+             \
+             (feature)
+
+# After fast-forward merge:
+main --- A --- B   (feature merged)
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Forcing a Merge Commit (No Fast-Forward)</b></li>
+<pre><code class="language-bash line-numbers">git merge --no-ff feature/login
+</code></pre>
+    <br/>
+    <ul>
+        <li>This forces Git to create a merge commit even if fast-forward is possible.</li>
+        <li>Useful for:
+            <ul>
+                <li>Preserving branch history</li>
+                <li>Code review traceability</li>
+                <li>More readable merges</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Fast-Forward vs Merge Commit</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Type</th>
+                <th>Git Behavior</th>
+                <th>Usage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Fast-forward</td>
+                <td>Moves branch pointer; no merge commit</td>
+                <td>Simple linear history</td>
+            </tr>
+            <tr>
+                <td>Merge commit</td>
+                <td>Creates a commit that joins histories</td>
+                <td>Feature branch workflow</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Checking Merge Status</b></li>
+<pre><code class="language-bash line-numbers">git status
+</code></pre>
+    <ul>
+        <li>Shows whether you are in the middle of a merge.</li>
+    </ul>
+    <br/>
+<pre><code class="language-bash line-numbers">git log --oneline --graph --decorate
+</code></pre>
+    <ul>
+        <li>Shows merge commits visually.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Merge Conflicts</b></li>
+    <br/>
+    <ul>
+        <li>A conflict occurs when two branches modify the same part of a file.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git merge feature/login
+# CONFLICT (content): Merge conflict in src/app.js
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Conflict markers appear inside the file:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers"><<<<<<< HEAD
+current branch code
+=======
+incoming branch code
+>>>>>>> feature/login
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>To resolve conflicts:
+            <ul>
+                <li>edit the file</li>
+                <li>remove conflict markers</li>
+                <li>keep the correct version</li>
+                <li>stage and commit</li>
+            </ul>
+        </li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git add src/app.js
+git commit
+</code></pre>
+
+    <ul>
+        <li>Git automatically creates the merge commit.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Aborting a Merge</b></li>
+<pre><code class="language-bash line-numbers">git merge --abort
+</code></pre>
+    <ul>
+        <li>Useful if merge goes wrong or conflicts are difficult to fix.</li>
+        <li>Restores the repository to the state before merge began.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Squash Merging</b></li>
+<pre><code class="language-bash line-numbers">git merge --squash feature/api
+git commit -m "Add API feature"
+</code></pre>
+    <br/>
+    <ul>
+        <li>Combines all feature branch commits into a single commit.</li>
+        <li>Does <u>not</u> retain branch history.</li>
+        <li>Does <u>not</u> create a merge commit.</li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>Merge vs Rebase (Conceptual)</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Operation</th>
+                <th>Description</th>
+                <th>History Style</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Merge</td>
+                <td>Joins two histories with a merge commit</td>
+                <td>Non-linear</td>
+            </tr>
+            <tr>
+                <td>Rebase</td>
+                <td>Replays your commits on top of another branch</td>
+                <td>Linear</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <ul>
+        <li>Merging keeps branch structure, rebasing rewrites history.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Common Merge Workflow</b></li>
+    <br/>
+    <ul>
+        <li><b>Example: Merge feature branch into main</b></li>
+    </ul>
+<pre><code class="language-bash line-numbers">git switch main
+git pull
+git merge feature/cart
+git push
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example: Bring latest main changes into feature branch</b></li>
+    </ul>
+<pre><code class="language-bash line-numbers">git switch feature/cart
+git merge main
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example: Merge without fast-forward</b></li>
+    </ul>
+<pre><code class="language-bash line-numbers">git merge --no-ff feature/cart
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Summary of Git Merge Options</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>git merge branch</code></td>
+                <td>Merge branch into current branch</td>
+            </tr>
+            <tr>
+                <td><code>git merge --no-ff branch</code></td>
+                <td>Force merge commit even if fast-forward is possible</td>
+            </tr>
+            <tr>
+                <td><code>git merge --squash branch</code></td>
+                <td>Merge changes as one commit (no merge commit)</td>
+            </tr>
+            <tr>
+                <td><code>git merge --abort</code></td>
+                <td>Cancel merge and restore previous state</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+</ol>
+<br/>
 <!-- * * * * * * * * * * * * * * -->
 
 
