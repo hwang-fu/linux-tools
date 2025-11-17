@@ -1,10 +1,17 @@
 <!-- * * * * * * * * * * * * * * -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.css">
+<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js"
+        data-prismjs-autoloader-path="https://cdn.jsdelivr.net/npm/prismjs/components/"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
 <style>
     table {
         border-collapse: collapse;      /* merge borders so you don't get double lines */
         width: 100%;                    /* optional: make it full width */
-        font-family: system-ui, sans-serif;
         font-size: 14px;
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
     }
 
     th {
@@ -85,12 +92,13 @@
         text-underline-offset: 2px;     /* optional: move it slightly down */
     }
 
-    body {
-        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+    .comment {
+        color: grey;
     }
 
-    table {
+    body {
         font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+        font-variant-ligatures: none;
     }
 
     ul > li {
@@ -106,7 +114,6 @@
         font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
         font-size: 0.875rem;                /* 14px-ish; avoid bare numbers */
         line-height: 1.4;
-        font-variant-ligatures: contextual;
     }
 
     /* Block code container */
@@ -158,7 +165,7 @@
         all inside the same terminal emulator (like Kitty, Alacritty, Konsole, etc.).</li>
     <br/>
     <br/>
-    <li>So tmux is <b>inside</b> your terminal — not another terminal emulator.</li>
+    <li>So tmux is <u>inside</u> your terminal — not another terminal emulator.</li>
     <br/>
 </ol>
 <br/>
@@ -172,8 +179,7 @@
 <h3>The real reasons people use tmux</h3>
 <ol>
     <li>Persistence: If you close your terminal or lose your SSH session, everything inside tmux keeps running.</li>
-<pre><code>
-# Start a session
+<pre><code class="language-bash line-numbers"># Start a session
 tmux new -s work
 
 # Do your stuff...
@@ -188,8 +194,7 @@ tmux attach -t work
     <br/>
     <br/>
     <li>Session management: You can have multiple sessions (e.g., one per project).</li>
-<pre><code>
-tmux new -s projA
+<pre><code class="language-bash line-numbers">tmux new -s projA
 tmux new -s projB
 tmux ls
 tmux attach -t projA
@@ -197,8 +202,7 @@ tmux attach -t projA
     <br/>
     <br/>
     <li>Automation and scripting: tmux can run commands on startup (from <code>.tmux.conf</code> or scripts):</li>
-<pre><code>
-tmux new-session -d -s dev
+<pre><code class="language-bash line-numbers">tmux new-session -d -s dev
 tmux new-window -t dev:1 -n "server" "npm run dev"
 tmux new-window -t dev:2 -n "logs" "tail -f /var/log/syslog"
 tmux attach -t dev
@@ -213,12 +217,304 @@ tmux attach -t dev
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3 id="tmux-sessions-windows-panes">Tmux: Sessions, Windows, and Panes</h3>
 <ol>
-    <li></li>
+    <li><u>Sessions</u>: groups of windows</li>
     <br/>
-    <li></li>
     <br/>
+
+
+    <li><u>Windows</u>: tabs inside a session</li>
+    <br/>
+    <br/>
+
+
+    <li><u>Panes</u>: splits inside a window</li>
+    <br/>
+    <br/>
+
+
+    <li><b>Starting and Attaching Sessions</b></li>
+<pre><code class="language-bash line-numbers">tmux
+# Starts a new unnamed session.
+</code></pre>
+    <br/>
+
+
+<pre><code class="language-bash line-numbers">tmux new -s mysession
+</code></pre>
+    <ul>
+        <li>Creates a session named <code>mysession</code>.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">tmux attach -t mysession
+</code></pre>
+    <ul>
+        <li>Attaches to an existing session.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">tmux ls
+</code></pre>
+    <ul>
+        <li>Lists all tmux sessions.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Detaching from a Session</b></li>
+<pre><code class="language-bash line-numbers">Ctrl-b d
+</code></pre>
+    <ul>
+        <li>Press <code>Ctrl-b</code>, release, then press <code>d</code>.</li>
+        <li>The session keeps running in the background.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Working with Sessions</b></li>
+<pre><code class="language-bash line-numbers">tmux rename-session -t &lt;oldname&gt; &lt;newname&gt;
+tmux kill-session -t &lt;mysession&gt;
+</code></pre>
+    <ul>
+        <li>Rename or destroy sessions from outside tmux.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Windows: Tabs Inside a Session</b> (A window is like a browser tab inside your tmux session)</li>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b c
+</code></pre>
+    <ul>
+        <li>Create a new window.</li>
+    </ul>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b w
+</code></pre>
+    <ul>
+        <li>List all windows and choose one.</li>
+    </ul>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b n   # next window
+Ctrl-b p   # previous window
+</code></pre>
+
+<pre><code class="language-bash line-numbers">Ctrl-b ,   # rename the current window
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Useful Window Commands</b></li>
+<pre><code class="language-bash line-numbers">tmux new-window -n editor
+tmux kill-window -t 2
+tmux select-window -t 1
+</code></pre>
+    <ul>
+        <li>Can be used from outside or inside tmux.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Panes: Splits Inside a Window</b></li>
+    <br/>
+    <ul>
+        <li>Panes allow you to split a single window into multiple terminals.</li>
+    </ul>
+    <br/>
+    <br/>
+
+
+<pre><code class="language-bash line-numbers">Ctrl-b %
+</code></pre>
+    <ul>
+        <li>Split vertically.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b "
+</code></pre>
+    <ul>
+        <li>Split horizontally.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b x
+</code></pre>
+    <ul>
+        <li>Close a pane.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b o
+</code></pre>
+    <ul>
+        <li>Switch to the next pane.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b ;
+</code></pre>
+    <ul>
+        <li>Toggle between current and previous pane.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Resizing Panes</b></li>
+<pre><code class="language-bash line-numbers">Ctrl-b Ctrl-arrow keys
+</code></pre>
+    <ul>
+        <li>Resize pane in direction of arrow key.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b : resize-pane -L 10
+Ctrl-b : resize-pane -R 10
+</code></pre>
+    <ul>
+        <li>Resize pane from the command prompt inside tmux.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Synchronize Panes</b></li>
+<pre><code class="language-bash line-numbers">Ctrl-b :
+set-window-option synchronize-panes on
+</code></pre>
+    <ul>
+        <li>Typing in one pane mirrors input to all panes in the window.</li>
+        <li>Useful for managing distributed servers or parallel CLI tasks.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Moving Panes and Converting Between Panes and Windows</b></li>
+<pre><code class="language-bash line-numbers">Ctrl-b !
+</code></pre>
+    <ul>
+        <li>Convert the current pane into its own window.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">Ctrl-b :
+join-pane -s 2 -t 1
+</code></pre>
+    <ul>
+        <li>Move a pane from window 2 into window 1.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Zooming a Pane</b></li>
+<pre><code class="language-bash line-numbers">Ctrl-b z
+</code></pre>
+    <ul>
+        <li>Toggles between:
+            <ul>
+                <li>zoomed fullscreen pane</li>
+                <li>normal layout</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Layouts (Auto-arranging Panes)</b></li>
+<pre><code class="language-bash line-numbers">Ctrl-b space
+</code></pre>
+    <ul>
+        <li>Cycles through layouts:
+            <ul>
+                <li>even-horizontal</li>
+                <li>even-vertical</li>
+                <li>main-horizontal</li>
+                <li>main-vertical</li>
+                <li>tiled</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Quick Overview of Key Bindings</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>Shortcut</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Create session</td>
+                <td><code>tmux new -s name</code></td>
+                <td>Start a named session</td>
+            </tr>
+            <tr>
+                <td>Detach</td>
+                <td><code>Ctrl-b d</code></td>
+                <td>Detach from session</td>
+            </tr>
+            <tr>
+                <td>New window</td>
+                <td><code>Ctrl-b c</code></td>
+                <td>Create a new window</td>
+            </tr>
+            <tr>
+                <td>Next/previous window</td>
+                <td><code>Ctrl-b n</code> / <code>Ctrl-b p</code></td>
+                <td>Navigate windows</td>
+            </tr>
+            <tr>
+                <td>Vertical split</td>
+                <td><code>Ctrl-b %</code></td>
+                <td>Split pane vertically</td>
+            </tr>
+            <tr>
+                <td>Horizontal split</td>
+                <td><code>Ctrl-b "</code></td>
+                <td>Split pane horizontally</td>
+            </tr>
+            <tr>
+                <td>Switch pane</td>
+                <td><code>Ctrl-b o</code></td>
+                <td>Move to next pane</td>
+            </tr>
+            <tr>
+                <td>Resize pane</td>
+                <td><code>Ctrl-b Ctrl-arrow</code></td>
+                <td>Resize active pane</td>
+            </tr>
+            <tr>
+                <td>Zoom</td>
+                <td><code>Ctrl-b z</code></td>
+                <td>Toggle fullscreen pane</td>
+            </tr>
+            <tr>
+                <td>Kill pane</td>
+                <td><code>Ctrl-b x</code></td>
+                <td>Close current pane</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/><br/>
 </ol>
 <br/>
 <!-- * * * * * * * * * * * * * * -->
@@ -228,14 +524,7 @@ tmux attach -t dev
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
@@ -243,14 +532,7 @@ tmux attach -t dev
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
@@ -258,14 +540,7 @@ tmux attach -t dev
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
@@ -273,194 +548,7 @@ tmux attach -t dev
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
 
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
 <!-- * * * * * * * * * * * * * * -->
 
 
