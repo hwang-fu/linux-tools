@@ -1,10 +1,17 @@
 <!-- * * * * * * * * * * * * * * -->
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.css">
+<script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js"
+        data-prismjs-autoloader-path="https://cdn.jsdelivr.net/npm/prismjs/components/"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
 <style>
     table {
         border-collapse: collapse;      /* merge borders so you don't get double lines */
         width: 100%;                    /* optional: make it full width */
-        font-family: system-ui, sans-serif;
         font-size: 14px;
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
     }
 
     th {
@@ -85,8 +92,13 @@
         text-underline-offset: 2px;     /* optional: move it slightly down */
     }
 
-    body * {
+    .comment {
+        color: grey;
+    }
+
+    body {
         font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+        font-variant-ligatures: none;
     }
 
     ul > li {
@@ -102,7 +114,6 @@
         font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
         font-size: 0.875rem;                /* 14px-ish; avoid bare numbers */
         line-height: 1.4;
-        font-variant-ligatures: contextual;
     }
 
     /* Block code container */
@@ -152,8 +163,7 @@
     <br/>
     <br/>
     <li>Before you can debug, you must compile your C/C++ program with the <code>-g</code> flag:</li>
-<pre><code>
-gcc -g main.c   -o main   # for C
+<pre><code class="language-bash line-numbers">gcc -g main.c   -o main   # for C
 g++ -g main.cpp -o main   # for C++
 </code></pre>
     <br/>
@@ -166,87 +176,6 @@ g++ -g main.cpp -o main   # for C++
     <li>Run GDB with <code>-tui</code> will start it looking like GUI in the terminal.<br/>
         In some terminals you can also call <code>set tui mouse on</code> to activate mouse support.</li>
 </ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3 id="summary">Commands Summary</h3>
-<br/>
-<table>
-    <thead>
-        <tr>
-            <th>Command</th>
-            <th>Alias</th>
-            <th>Description</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td><code>run</code></td>
-            <td><code>r</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>break</code></td>
-            <td><code>b</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>next</code></td>
-            <td><code>n</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>step</code></td>
-            <td><code>s</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>continue</code></td>
-            <td><code>c</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>print &lt;expr&gt;</code></td>
-            <td><code>p &lt;expr&gt;</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>info locals</code></td>
-            <td><code></code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>info breakpoints</code></td>
-            <td><code></code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>delete</code></td>
-            <td><code></code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>backtrace</code></td>
-            <td><code>bt</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>list</code></td>
-            <td><code>l</code></td>
-            <td></td>
-        </tr>
-        <tr>
-            <td><code>quit</code></td>
-            <td><code>q</code></td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
 <br/>
 <!-- * * * * * * * * * * * * * * -->
 
@@ -368,20 +297,19 @@ g++ -g main.cpp -o main   # for C++
 <h3>Inspecting variables and memory (<a href="#summary">print</a>)</h3>
 <ol>
     <li>To print a value:
-<pre><code>
-    (gdb) print i
-    (gdb) print &amp;i
-    (gdb) print a + b
-    (gdb) print *ptr
-    (gdb) print arr[3]
-    (gdb) print *(struct node*)ptr
-    (gdb) print ((int*)buf)[3]
+<pre><code class="language-bash line-numbers">(gdb) print i
+(gdb) print &amp;i
+(gdb) print a + b
+(gdb) print *ptr
+(gdb) print arr[3]
+(gdb) print *(struct node*)ptr
+(gdb) print ((int*)buf)[3]
 
-    (gdb) p /x i                # hex
-    (gdb) p /d i                # signed dec
-    (gdb) p /u i                # unsigned dec
-    (gdb) p /t i                # binary
-    (gdb) p /c ch               # char
+(gdb) p /x i                # hex
+(gdb) p /d i                # signed dec
+(gdb) p /u i                # unsigned dec
+(gdb) p /t i                # binary
+(gdb) p /c ch               # char
 </code></pre>
     </li>
     <br/>
@@ -390,23 +318,20 @@ g++ -g main.cpp -o main   # for C++
     <br/>
     <br/>
     <li>Display local variables or arguments:</li>
-<pre><code>
-    (gdb) info locals       # Shows all local variables in the current stack frame.
-    (gdb) info args         # Lists all function arguments for the current stack frame.
+<pre><code class="language-bash line-numbers">(gdb) info locals       # Shows all local variables in the current stack frame.
+(gdb) info args         # Lists all function arguments for the current stack frame.
 </code></pre>
     <br/>
     <br/>
     <li>Print information about registers:</li>
-<pre><code>
-    (gdb) info registers
-    (gdb) print $pc, print $sp, print $fp     # architecture-specific names valid
+<pre><code class="language-bash line-numbers">(gdb) info registers
+(gdb) print $pc, print $sp, print $fp     # architecture-specific names valid
 </code></pre>
     <br/>
     <br/>
     <li>Modify during debug (BE CAREFUL):</li>
-<pre><code>
-    (gdb) set var i = 42
-    (gdb) set {int}0x7fffffffde20 = 123
+<pre><code class="language-bash line-numbers">(gdb) set var i = 42
+(gdb) set {int}0x7fffffffde20 = 123
 </code></pre>
     <br/>
     <br/>
@@ -543,14 +468,7 @@ g++ -g main.cpp -o main   # for C++
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
