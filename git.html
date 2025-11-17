@@ -627,6 +627,202 @@ git commit -m "Add hello to a.txt"
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="git-add-rm">Git Add and Git Rm</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li><code>git add</code> and <code>git rm</code> are two fundamental commands used to manage which file changes are included in the next commit.</li>
+        <br/>
+        <li><code>git add</code> moves file changes from the <u>Working Directory</u> to the <u>Staging Area</u>.</li>
+        <br/>
+        <li><code>git rm</code> removes files from both the <u>Working Directory</u> and the <u>Staging Area</u>.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Common git add Commands</b></li>
+<pre><code class="language-bash line-numbers">git add .</code></pre>
+    <ul>
+        <li>Stages all changes in the current directory and subdirectories.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git add -A</code></pre>
+    <ul>
+        <li>Stage all changes in the repository (added, modified, deleted).</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git add -p</code></pre>
+    <ul>
+        <li>Patch mode: interactively choose hunks to stage.</li>
+        <li>Useful for creating clean, logical commits.</li>
+    </ul>
+    <br/>
+    <br/>
+
+<pre><code class="language-bash line-numbers">git add "*.txt"</code></pre>
+    <ul>
+        <li>Stages all <code>.txt</code> files using glob patterns.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>Staging Modified and Deleted Files</b></li>
+<pre><code class="language-bash line-numbers">rm old.txt
+git add old.txt
+</code></pre>
+    <ul>
+        <li>If a file is removed manually via <code>rm</code>, <code>git add</code> stages the deletion.</li>
+    </ul>
+    <br/><br/><br/>
+
+
+    <li><b>git rm: Remove Files from Git</b></li>
+    <br/>
+    <ul>
+        <li><code>git rm</code> removes files from the Working Directory and the Staging Area</li>
+        <li>Use it when you want to delete a file and record that deletion in your next commit.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git rm file.txt
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>This does:
+            <ul>
+                <li>Deletes <code>file.txt</code> from disk</li>
+                <li>Stages the deletion</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Common git rm Options</b></li>
+
+<pre><code class="language-bash line-numbers">git rm --cached file.txt
+</code></pre>
+    <ul>
+        <li>Removes file from Git but keeps the physical file on disk.</li>
+        <li>Used when you accidentally commit something you want to keep locally (e.g., logs, environment files).</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git rm -r docs/</code></pre>
+    <ul>
+        <li>Removes a directory recursively.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git rm -f file.txt</code></pre>
+    <ul>
+        <li>Forces removal, even if the file has modifications.</li>
+        <li>Useful when file differs from last commit and Git blocks removal.</li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>Workflow Examples</b></li>
+    <br/>
+    <ul>
+        <li><b>Example 1: Add a new file</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">echo "hello" &gt; a.txt
+git add a.txt
+git commit -m "Add a.txt"
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example 2: Delete a file using git rm</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git rm old.txt
+git commit -m "Remove old.txt"
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example 3: Remove from Git, keep file on disk</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git rm --cached secrets.env
+echo "secrets.env" &gt;&gt; .gitignore
+git commit -m "Stop tracking secrets.env"
+</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Example 4: Unstage a file added by mistake</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git add largefile.zip
+git restore --staged largefile.zip
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Comparison Summary</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Command</th>
+                <th>Purpose</th>
+                <th>Modifies Disk?</th>
+                <th>Modifies Index?</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>git add file</code></td>
+                <td>Stage file modifications</td>
+                <td>No</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td><code>git add -A</code></td>
+                <td>Stage all changes</td>
+                <td>No</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td><code>git rm file</code></td>
+                <td>Delete file, stage deletion</td>
+                <td>Yes</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td><code>git rm --cached file</code></td>
+                <td>Remove from git, keep file</td>
+                <td>No</td>
+                <td>Yes</td>
+            </tr>
+        </tbody>
+    </table>
+</ol>
+<br/>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
 
 <!-- * * * * * * * * * * * * * * -->
 
