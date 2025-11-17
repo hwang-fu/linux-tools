@@ -156,7 +156,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3>Conventional Commits</h3>
+<h3 id="git-conventional-commits">Conventional Commits</h3>
 <ol>
 <table>
     <thead>
@@ -271,18 +271,16 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3>Branches</h3>
+<h3 id="git-branches">Branches</h3>
 <ol>
-    <li>In Git, a <b>branch</b> is simply a pointer (a reference) to a specific commit in the repo history.<br/>
+    <li>In Git, a <u>branch</u> is simply a pointer (a reference) to a specific commit in the repo history.<br/>
         It allows you to develop features, fix bugs, or experiment independently from the main codebase.</li>
     <br/>
     <br/>
     <li>When you create a new Git repository, Git starts with a default branch (it is usually the branch that holds your production-ready code),<br/>
         commonly named:</li>
     <ul>
-        <br/>
         <li><code>main</code> (modern default)</li>
-        <br/>
         <li><code>master</code> (legacy / default in old versions)</li>
     </ul>
     <br/>
@@ -348,7 +346,280 @@ git push -u origin &lt;branch-name&gt;
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="git-three-stages">The Three Stages of Git</h3>
+<ol>
+    <li><b>Introduction</b></li>
+    <br/>
+    <ul>
+        <li>Git is a distributed version control system that tracks changes to files over time.</li>
+        <br/>
+        <li>Every file in your Git repository is always in one of three main stages:</li>
+        <ul>
+            <li><u>Working Directory</u>: your actual files on disk</li>
+            <li><u>Staging Area</u> (Index): files prepared for commit</li>
+            <li><u>Repository</u>: committed snapshots stored in <code>.git/</code></li>
+        </ul>
+    </ul>
+    <br/><br/>
 
+
+    <li><b>The Three Stages Overview</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Stage</th>
+                <th>Description</th>
+                <th>Example Files</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Working Directory</td>
+                <td>Files you are editing right now</td>
+                <td><code>modified.txt</code></td>
+            </tr>
+            <tr>
+                <td>Staging Area (Index)</td>
+                <td>Files marked for the next commit</td>
+                <td><code>added.txt</code></td>
+            </tr>
+            <tr>
+                <td>Repository</td>
+                <td>Committed snapshots stored permanently</td>
+                <td><code>.git/objects</code></td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+
+
+    <li><b>1. Working Directory (Untracked or Modified State)</b></li>
+    <br/>
+    <ul>
+        <li>This is where you create, edit, delete, and modify files.</li>
+        <li>The working directory shows:
+            <ul>
+                <li><u>untracked files</u>: Git doesn't know about them</li>
+                <li><u>modified files</u>: Git knows them but they were changed</li>
+                <li><u>deleted files</u>: files removed but not staged yet</li>
+            </ul>
+        </li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git status
+</code></pre>
+
+<pre><code class="language-bash">Untracked files:
+  newfile.txt
+
+Changes not staged for commit:
+  modified: README.md
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>The working directory contains files before they are staged.</li>
+        <li>To move files to the next stage, you must stage them.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>2. Staging Area (Index)</b></li>
+    <br/>
+    <ul>
+        <li>The staging area is a temporary holding place for files you want to include in your next commit.</li>
+        <li>You stage files manually using:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git add filename
+git add .
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>After staging, changes move from the working directory to the index:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git status
+</code></pre>
+
+<pre><code class="language-bash">Changes to be committed:
+  new file:   newfile.txt
+  modified:   README.md
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Only staged files are included in the next commit.</li>
+        <li>The staging area allows building commits intentionally and selectively.</li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>3. Repository (Local Git Database)</b></li>
+    <br/>
+    <ul>
+        <li>Once you commit, changes are saved permanently into the local Git repository at <code>.git/</code>.</li>
+        <li>Committed files become part of Git history.</li>
+        <li>Use:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git commit -m "message"
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Commits move staged files into the repository:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git log --oneline
+</code></pre>
+
+<pre><code class="language-bash">a4c71f1  Add README and initial setup
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Files in the repository are versioned and safe.</li>
+        <li>Undoing or retrieving them is easy.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>The Full Git Workflow with Example</b></li>
+
+<pre><code class="language-bash line-numbers"># 1. You modify two files
+echo "hello" &gt;&gt; a.txt
+rm b.txt
+
+# 2. You stage only one file
+git add a.txt
+
+# 3. You commit staged changes
+git commit -m "Add hello to a.txt"
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Only <code>a.txt</code> enters the repository.</li>
+        <li><code>b.txt</code> remains in the working directory as a deletion.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Visual Representation of the Stages</b></li>
+<pre><code class="language-bash">Working Directory  --(git add)--&gt;  Staging Area  --(git commit)--&gt;  Repository</code></pre>
+    <br/><br/>
+
+
+    <li><b>Commands Related to Each Stage</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Stage</th>
+                <th>Action</th>
+                <th>Command</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Working Directory</td>
+                <td>See changes</td>
+                <td><code>git status</code></td>
+            </tr>
+            <tr>
+                <td>Staging Area</td>
+                <td>Add file to staging</td>
+                <td><code>git add file</code></td>
+            </tr>
+            <tr>
+                <td>Staging Area</td>
+                <td>Unstage a file</td>
+                <td><code>git restore --staged file</code></td>
+            </tr>
+            <tr>
+                <td>Repository</td>
+                <td>Commit staged changes</td>
+                <td><code>git commit -m "message"</code></td>
+            </tr>
+            <tr>
+                <td>Repository</td>
+                <td>View history</td>
+                <td><code>git log</code></td>
+            </tr>
+        </tbody>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Undoing in Each Stage</b></li>
+    <br/>
+    <ul>
+        <li><b>Undo changes in working directory</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git restore file.txt
+</code></pre>
+
+    <ul>
+        <li><b>Unstage a file</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git restore --staged file.txt
+</code></pre>
+
+    <ul>
+        <li><b>Undo the last commit (keep changes)</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git reset --soft HEAD~1
+</code></pre>
+
+    <ul>
+        <li><b>Undo the last commit (throw away changes)</b></li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">git reset --hard HEAD~1
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Summary of the Three Stages</b></li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Stage</th>
+                <th>State</th>
+                <th>Command to Move Forward</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Working Directory</td>
+                <td>Editing files</td>
+                <td><code>git add</code></td>
+            </tr>
+            <tr>
+                <td>Staging Area</td>
+                <td>Preparing commit</td>
+                <td><code>git commit</code></td>
+            </tr>
+            <tr>
+                <td>Repository</td>
+                <td>Stored history</td>
+                <td><code>git push</code> (optional)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/><br/>
+</ol>
+<br/>
 <!-- * * * * * * * * * * * * * * -->
 
 
