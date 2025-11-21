@@ -145,6 +145,7 @@
 <nav id="toc" style="margin-bottom: 2rem;">
     <ul style="line-height: 1.8;">
         <li><a href="#curl-introduction">Introduction</a></li>
+        <li><a href="#curl-common-options">Common Options</a></li>
     </ul>
 </nav>
 <hr/>
@@ -152,7 +153,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3 id="curl-introduction">Introduction to <code>curl</code> – the Command-Line URL Tool</h3>
+<h3 id="curl-introduction">The Command-Line URL Tool</h3>
 <ol>
 
     <li><b>What Is curl?</b></li>
@@ -535,7 +536,375 @@ curl --manual   # portable way</code></pre>
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="curl-common-options">Common Options</h3>
+<ol>
 
+    <li><b>Basic Output &amp; File Handling Options</b></li>
+    <ul>
+        <br/>
+        <li>These options control where the response goes and how it is displayed.</li>
+        <br/>
+    </ul>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-h</code>, <code>--help</code></td>
+            <td>Show a short help summary of available options.</td>
+            <td><code>curl --help</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-V</code>, <code>--version</code></td>
+            <td>Show version info and supported protocols/features.</td>
+            <td><code>curl --version</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-s</code>, <code>--silent</code></td>
+            <td>Silent mode: no progress meter or error messages (only body on stdout).</td>
+            <td><code>curl -s https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-S</code>, <code>--show-error</code></td>
+            <td>Show errors even when <code>-s</code> is used (good for scripts).</td>
+            <td><code>curl -sS https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o &lt;file&gt;</code></td>
+            <td>Write response body to the given file name.</td>
+            <td><code>curl -o page.html https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-O</code> (capital O)</td>
+            <td>Save to a file named after the remote URL&apos;s path (remote file name).</td>
+            <td><code>curl -O https://example.com/file.zip</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-L</code>, <code>--location</code></td>
+            <td>Follow HTTP redirects (3xx responses) automatically.</td>
+            <td><code>curl -L http://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-#</code></td>
+            <td>Display a nice progress bar instead of the default meter.</td>
+            <td><code>curl -# -O https://example.com/big.iso</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-C -</code></td>
+            <td>Resume a previous download (if server supports HTTP range requests).</td>
+            <td><code>curl -C - -O https://example.com/big.iso</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>HTTP Request &amp; Response Control</b></li>
+    <br/>
+    <ul>
+        <li>These options control the HTTP method and what parts of the response you see.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-X &lt;METHOD&gt;</code>, <code>--request &lt;METHOD&gt;</code></td>
+            <td>Explicitly specify HTTP method: GET, POST, PUT, DELETE, etc.</td>
+            <td><code>curl -X DELETE https://api.example.com/items/123</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-i</code>, <code>--include</code></td>
+            <td>Include HTTP response headers in the output (before body).</td>
+            <td><code>curl -i https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-I</code>, <code>--head</code></td>
+            <td>Send an HTTP HEAD request (get only headers, no body).</td>
+            <td><code>curl -I https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--http1.1</code>, <code>--http2</code></td>
+            <td>Force HTTP/1.1 or HTTP/2 for the request (if supported).</td>
+            <td><code>curl --http2 https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--compressed</code></td>
+            <td>Request a compressed response (gzip, deflate) and automatically decompress it.</td>
+            <td><code>curl --compressed https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--limit-rate &lt;speed&gt;</code></td>
+            <td>Limit transfer speed (e.g. <code>200k</code>, <code>2M</code>).</td>
+            <td><code>curl --limit-rate 200k -O https://example.com/file.zip</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Sending Data: Forms, JSON, Raw Bodies</b></li>
+    <br/>
+    <ul>
+        <li>These options are central when working with REST APIs or HTML forms.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-d &lt;data&gt;</code>, <code>--data &lt;data&gt;</code></td>
+            <td>
+                Send a request body. Defaults to <code>application/x-www-form-urlencoded</code> and switches method to POST if not set.
+            </td>
+            <td><code>curl -d "user=alice&amp;pass=secret" https://example.com/login</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--data-urlencode &lt;data&gt;</code></td>
+            <td>Like <code>-d</code>, but URL-encodes the given data (safe for special characters).</td>
+            <td><code>curl --data-urlencode "q=haskell &amp; monads" https://example.com/search</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--data-binary &lt;data&gt;</code></td>
+            <td>Send data exactly as given, without stripping newlines or treating <code>@</code> specially.</td>
+            <td><code>curl --data-binary "@/path/to/raw.bin" https://example.com/upload</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-F &lt;name=@file&gt;</code>, <code>--form</code></td>
+            <td>Send multipart/form-data (file upload) like an HTML form.</td>
+            <td><code>curl -F "file=@/path/to/photo.jpg" https://example.com/upload</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-G</code>, <code>--get</code></td>
+            <td>Send the data as query parameters in a GET request instead of POST.</td>
+            <td><code>curl -G -d "q=haskell" -d "page=2" https://example.com/search</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Headers &amp; Authentication Options</b></li>
+    <br/>
+    <ul>
+        <li>For APIs and protected resources, you often need to set custom headers or credentials.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-H &lt;header&gt;</code>, <code>--header &lt;header&gt;</code></td>
+            <td>Add a custom HTTP header. Can be used multiple times.</td>
+            <td><code>curl -H "Accept: application/json" https://api.example.com/data</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-A &lt;agent&gt;</code>, <code>--user-agent &lt;agent&gt;</code></td>
+            <td>Set a custom User-Agent string.</td>
+            <td><code>curl -A "MyClient/1.0" https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-u &lt;user:pass&gt;</code>, <code>--user &lt;user:pass&gt;</code></td>
+            <td>Use HTTP Basic authentication (sends Authorization: Basic ... header).</td>
+            <td><code>curl -u "alice:secret" https://api.example.com/me</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--oauth2-bearer &lt;token&gt;</code></td>
+            <td>Send OAuth2 Bearer token as Authorization header.</td>
+            <td><code>curl --oauth2-bearer YOUR_TOKEN https://api.example.com/data</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--referer &lt;url&gt;</code></td>
+            <td>Set the HTTP Referer header.</td>
+            <td><code>curl --referer "https://google.com" https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-b &lt;file or data&gt;</code>, <code>--cookie</code></td>
+            <td>Send cookies from a file or directly as a string (client side).</td>
+            <td><code>curl -b "session=abcd1234" https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-c &lt;file&gt;</code>, <code>--cookie-jar</code></td>
+            <td>Save cookies to a file after the request (for reuse later).</td>
+            <td><code>curl -c cookies.txt https://example.com/login</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>TLS / HTTPS &amp; Security Options</b></li>
+    <br/>
+    <ul>
+        <li>These options affect how <code>curl</code> handles HTTPS connections and certificates.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-k</code>, <code>--insecure</code></td>
+            <td>Skip certificate verification (accept self-signed/invalid certs). Useful for local dev, <b>not</b> recommended in production.</td>
+            <td><code>curl -k https://localhost:8443</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--cacert &lt;file&gt;</code></td>
+            <td>Use a custom CA certificate file to verify the server.</td>
+            <td><code>curl --cacert myCA.pem https://internal.example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--cert &lt;cert&gt;</code></td>
+            <td>Provide a client certificate (for mutual TLS authentication).</td>
+            <td><code>curl --cert mycert.pem https://secure.example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--key &lt;key&gt;</code></td>
+            <td>Private key corresponding to <code>--cert</code>, if stored separately.</td>
+            <td><code>curl --cert client.crt --key client.key https://secure.example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--tlsv1.2</code>, <code>--tlsv1.3</code></td>
+            <td>Force a specific TLS version (useful for debugging or strict policies).</td>
+            <td><code>curl --tlsv1.2 https://example.com</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Debugging &amp; Performance Options</b></li>
+    <br/>
+    <ul>
+        <li>These options help when you are inspecting or tuning HTTP requests.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-v</code>, <code>--verbose</code></td>
+            <td>Verbose mode: show request headers, response headers, and connection info.</td>
+            <td><code>curl -v https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--trace &lt;file&gt;</code></td>
+            <td>Write a very detailed trace of everything curl does into a file (binary safe).</td>
+            <td><code>curl --trace trace.log https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--trace-ascii &lt;file&gt;</code></td>
+            <td>Like <code>--trace</code>, but easier to read (ASCII only).</td>
+            <td><code>curl --trace-ascii debug.txt https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--max-time &lt;seconds&gt;</code></td>
+            <td>Limit the total allowed time for the whole transfer.</td>
+            <td><code>curl --max-time 10 https://slow.example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--connect-timeout &lt;seconds&gt;</code></td>
+            <td>Limit how long curl waits to establish the connection.</td>
+            <td><code>curl --connect-timeout 5 https://example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--retry &lt;n&gt;</code></td>
+            <td>Automatically retry the request up to <code>n</code> times on transient errors.</td>
+            <td><code>curl --retry 3 https://flaky.example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>--retry-delay &lt;seconds&gt;</code></td>
+            <td>Wait this many seconds between retries.</td>
+            <td><code>curl --retry 3 --retry-delay 5 https://flaky.example.com</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Common Option Combinations (Mini Cheat Sheet)</b></li>
+    <br/>
+    <ul>
+        <li>Some very common real-world patterns:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers"># 1) Simple JSON API GET request with custom header
+curl -sS -H "Accept: application/json" https://api.example.com/users
+
+# 2) JSON POST with Bearer token
+curl -sS -X POST https://api.example.com/users \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -d '{"name":"Alice","age":30}'
+
+# 3) Follow redirects, save result to file
+curl -L -o page.html https://example.com
+
+# 4) Debug a failing HTTPS endpoint (verbose + do not verify cert)
+curl -v -k https://localhost:8443
+
+# 5) Upload a file with additional form data
+curl -F "file=@/path/to/file.txt" \
+     -F "description=My upload" \
+     https://example.com/upload</code></pre>
+    <br/><br/>
+
+</ol>
 <!-- * * * * * * * * * * * * * * -->
 
 
