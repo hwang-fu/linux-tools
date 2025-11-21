@@ -151,6 +151,7 @@
         <li><a href="#systemd-intro">Introduction</a></li>
         <li><a href="#systemd-info">Viewing Information in systemd</a></li>
         <li><a href="#systemd-services">Working with Services</a></li>
+        <li><a href="#systemd-changing-states">Changing System States</a></li>
     </ul>
 </nav>
 <hr/>
@@ -790,7 +791,168 @@ ExecStart=/usr/bin/python3 app.py
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="systemd-changing-states">Changing System States in <code>systemd</code></h3>
+<ol>
 
+    <li><b>Overview</b></li>
+    <ul>
+        <br/>
+        <li><code>systemd</code> manages the entire system state using <b>targets</b>.</li>
+        <br/>
+        <li>Targets replace the old SysV “runlevels”.</li>
+        <br/>
+        <li>Each target represents a specific operating mode such as:
+            <ul>
+                <li>graphical UI</li>
+                <li>multi-user server mode</li>
+                <li>rescue mode</li>
+                <li>shutdown / reboot</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Common systemd Targets</b></li>
+    <br/>
+    <ul>
+        <li>The most frequently used systemd targets:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">poweroff.target      → Shut down the system
+reboot.target        → Restart the system
+multi-user.target    → Multi-user text mode (server mode)
+graphical.target     → GUI login mode
+rescue.target        → Single-user maintenance mode
+emergency.target     → Very minimal recovery shell
+default.target       → The system’s default boot mode
+</code></pre>
+
+    <ul>
+        <li>These targets group services together to define what runs in each state.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Check the Current System State</b></li>
+    <br/>
+    <ul>
+        <li>To see what the system boots into by default:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl get-default
+</code></pre>
+
+    <ul>
+        <li>Example outputs:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">graphical.target
+multi-user.target
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Switching System States (Temporarily)</b></li>
+    <br/>
+    <ul>
+        <li>You can change the current target without altering the boot default.</li>
+        <li>Switch to multi-user (non-GUI) mode:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl isolate multi-user.target
+</code></pre>
+
+    <ul>
+        <li>Switch to graphical mode (start GUI):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl isolate graphical.target
+</code></pre>
+
+    <ul>
+        <li><b>Note:</b> <code>isolate</code> stops units not required by the new target.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Changing the Default Boot Target</b></li>
+    <br/>
+    <ul>
+        <li>To permanently change what the system boots into:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl set-default multi-user.target
+</code></pre>
+
+<pre><code class="language-bash line-numbers">sudo systemctl set-default graphical.target
+</code></pre>
+
+    <ul>
+        <li>This creates a symlink for <code>/etc/systemd/system/default.target</code>.</li>
+        <li>Does <b>not</b> restart the system — only affects the next boot.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Rebooting, Powering Off, and Suspending</b></li>
+    <br/>
+    <ul>
+        <li>systemd provides direct system state-changing commands:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl reboot       # Restart system
+sudo systemctl poweroff     # Shut down
+sudo systemctl halt         # Halt CPU (stop)
+sudo systemctl suspend      # Sleep mode
+sudo systemctl hibernate    # Hibernate
+</code></pre>
+
+    <ul>
+        <li>These replace older commands like <code>shutdown -r now</code> and <code>halt</code>.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Recovery States (Rescue / Emergency)</b></li>
+    <br/>
+    <ul>
+        <li>If something goes wrong, systemd provides minimal recovery targets.</li>
+
+        <li><b>Rescue mode</b> — basic system with root shell:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl rescue
+</code></pre>
+
+    <ul>
+        <li><b>Emergency mode</b> — minimal environment, no services, direct root shell:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl emergency
+</code></pre>
+
+    <ul>
+        <li>Useful for repairing corrupted filesystems or broken configurations.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Showing a Target’s Dependencies</b></li>
+    <br/>
+    <ul>
+        <li>You can inspect which units a target pulls in:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-dependencies graphical.target
+</code></pre>
+
+    <ul>
+        <li>This shows the entire boot chain visually (ASCII tree).</li>
+    </ul>
+    <br/><br/>
+</ol>
 <!-- * * * * * * * * * * * * * * -->
 
 
