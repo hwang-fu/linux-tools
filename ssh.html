@@ -147,6 +147,7 @@
 <nav id="toc" style="margin-bottom: 2rem;">
     <ul style="line-height: 1.8;">
         <li><a href="#ssh-intro">Introduction</a></li>
+        <li><a href="#ssh-options">Options</a></li>
     </ul>
 </nav>
 <hr/>
@@ -190,8 +191,7 @@
         </li>
         <br/>
         <li>The general connection flow:</li>
-<pre><code class="language-plaintext line-numbers">
-Your Machine  → (encrypted tunnel) → Remote Server
+<pre><code class="language-plaintext line-numbers">Your Machine  → (encrypted tunnel) → Remote Server
 </code></pre>
     </ul>
 
@@ -203,27 +203,22 @@ Your Machine  → (encrypted tunnel) → Remote Server
 
 
     <li><b>SSH Key Pairs</b></li>
-    <br/>
     <ul>
+        <br/>
         <li>SSH keys are the most secure way to authenticate.</li>
+        <br/>
         <li>A key pair consists of:</li>
         <ul>
             <li><b>Private key</b> — stays on your machine and must never be shared.</li>
-            <li><b>Public key</b> &nbsp; — stored on the remote server in <code>~/.ssh/authorized_keys</code>.</li>
+            <li><b>Public key</b> — stored on the remote server in <code>~/.ssh/authorized_keys</code>.</li>
         </ul>
+        <br/>
         <li>To generate a key pair:</li>
     </ul>
 
 <pre><code class="language-bash line-numbers">ssh-keygen -t ed25519 -C "your_email@example.com"</code></pre>
-
-    <br/>
     <ul>
-        <li>This creates:
-            <ul>
-                <li><code>id_ed25519</code> — private key</li>
-                <li><code>id_ed25519.pub</code> — public key</li>
-            </ul>
-        </li>
+        <li>This creates <code>id_ed25519</code> the private key and <code>id_ed25519.pub</code> the public key.</li>
         <li>For older systems, <code>-t rsa</code> may be used, but <code>ed25519</code> is recommended for better security and performance.</li>
     </ul>
     <br/><br/>
@@ -269,12 +264,10 @@ ssh root@192.168.1.10         # LAN server</code></pre>
         <li>The first time you connect to a server, SSH shows a message:</li>
     </ul>
 
-<pre><code class="language-plaintext line-numbers">
-The authenticity of host 'example.com (54.x.x.x)' can't be established.
+<pre><code class="language-plaintext line-numbers">The authenticity of host 'example.com (54.x.x.x)' can't be established.
 Are you sure you want to continue connecting (yes/no)?
 </code></pre>
 
-    <br/>
     <ul>
         <li>This is SSH verifying the server’s identity.</li>
         <li>It stores the server’s fingerprint in <code>~/.ssh/known_hosts</code>.</li>
@@ -289,13 +282,12 @@ Are you sure you want to continue connecting (yes/no)?
         <li>Your local SSH configuration lives in <code>~/.ssh/</code>:</li>
     </ul>
 
-<pre><code class="language-plaintext line-numbers">
-~/.ssh/
-    id_ed25519           ← private key
-    id_ed25519.pub       ← public key
-    authorized_keys      ← keys allowed to log in (on server)
-    known_hosts          ← server fingerprints
-    config               ← optional config file
+<pre><code class="language-bash line-numbers">~/.ssh/
+    id_ed25519           # private key
+    id_ed25519.pub       # public key
+    authorized_keys      # keys allowed to log in (on server)
+    known_hosts          # server fingerprints
+    config               # optional config file
 </code></pre>
 
     <br/><br/>
@@ -327,27 +319,30 @@ Are you sure you want to continue connecting (yes/no)?
     <br/><br/>
 
 
-    <li><b>Copying Files via SSH</b></li>
-    <br/>
+    <li>To Copy Files via SSH</li>
     <ul>
-        <li>Use <b>scp</b> (Secure Copy) or <b>rsync</b> over SSH.</li>
+        <br/>
+        <li>Use <code>scp</code> (Secure Copy) or <code>rsync</code> over SSH.</li>
     </ul>
 
-    <ul><li><b>Upload a file:</b></li></ul>
+    <br/>
+    <ul><li>To Upload a file:</li></ul>
 
 <pre><code class="language-bash line-numbers">scp file.txt user@host:/remote/path/</code></pre>
 
-    <ul><li><b>Download a file:</b></li></ul>
+    <br/>
+    <ul><li>To Download a file:</li></ul>
 
 <pre><code class="language-bash line-numbers">scp user@host:/remote/path/file.txt ./</code></pre>
 
-    <ul><li><b>Copy a folder recursively:</b></li></ul>
+    <br/>
+    <ul><li>To Copy a folder recursively:</li></ul>
 
 <pre><code class="language-bash line-numbers">scp -r ./myfolder user@host:/var/www/</code></pre>
 
     <br/>
     <ul>
-        <li><b>rsync</b> example (faster, syncs changes only):</li>
+        <li><code>rsync</code> example (faster, syncs changes only):</li>
     </ul>
 
 <pre><code class="language-bash line-numbers">rsync -avz ./site/ user@host:/var/www/site/</code></pre>
@@ -361,13 +356,13 @@ Are you sure you want to continue connecting (yes/no)?
         <li>SSH can forward ports to securely tunnel traffic.</li>
     </ul>
 
+    <br/>
     <ul>
         <li><b>Local port forward</b> — access remote service through local port:</li>
     </ul>
 
 <pre><code class="language-bash line-numbers">ssh -L 8080:localhost:3000 user@host</code></pre>
 
-    <br/>
     <ul>
         <li>This forwards <code>localhost:8080</code> on your machine → <code>localhost:3000</code> on the remote server.</li>
         <li>Useful for:
@@ -386,7 +381,6 @@ Are you sure you want to continue connecting (yes/no)?
 
 <pre><code class="language-bash line-numbers">ssh -R 9000:localhost:3000 user@host</code></pre>
 
-    <br/>
     <ul>
         <li>This allows a remote server to access a local port on your machine.</li>
     </ul>
@@ -402,7 +396,6 @@ Are you sure you want to continue connecting (yes/no)?
 <pre><code class="language-bash line-numbers">eval "$(ssh-agent)"
 ssh-add ~/.ssh/id_ed25519</code></pre>
 
-    <br/>
     <ul>
         <li>Once added, SSH can use the keys automatically.</li>
     </ul>
@@ -420,6 +413,7 @@ ssh-add ~/.ssh/id_ed25519</code></pre>
             <li>Using fail2ban to block repeated failures</li>
             <li>Enforcing firewall rules</li>
         </ul>
+        <br/>
         <li>SSH server config file (on remote server): <code>/etc/ssh/sshd_config</code>.</li>
     </ul>
     <br/><br/>
@@ -432,7 +426,412 @@ ssh-add ~/.ssh/id_ed25519</code></pre>
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="ssh-options">Common <code>ssh</code> Command Options</h3>
+<ol>
 
+    <li><b>Overview</b></li>
+    <ul>
+        <br/>
+        <li>This chapter summarizes the most commonly used <code>ssh</code> client options.</li>
+        <br/>
+        <li>These options apply to the OpenSSH client (the one you normally use on Linux/macOS and WSL).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Basic Connection and Identity Options</b></li>
+    <br/>
+    <ul>
+        <li>These options are most frequently used when connecting to a host.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-p &lt;port&gt;</code></td>
+            <td>Connect to the remote host on the specified TCP port (default is 22).</td>
+            <td><code>ssh -p 2222 user@example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-i &lt;identity_file&gt;</code></td>
+            <td>Use this private key file for authentication (instead of the default <code>~/.ssh/id_*</code>).</td>
+            <td><code>ssh -i ~/.ssh/mykey.pem ubuntu@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-l &lt;user&gt;</code></td>
+            <td>Specify the remote login user (same as <code>user@host</code>).</td>
+            <td><code>ssh -l ubuntu 1.2.3.4</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-F &lt;configfile&gt;</code></td>
+            <td>Use an alternative SSH config file instead of <code>~/.ssh/config</code>.</td>
+            <td><code>ssh -F ./ssh_config my-alias</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-4</code>, <code>-6</code></td>
+            <td>Force use of IPv4 (<code>-4</code>) or IPv6 (<code>-6</code>).</td>
+            <td><code>ssh -4 user@example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-C</code></td>
+            <td>Enable compression on the SSH connection (useful on slow links).</td>
+            <td><code>ssh -C user@example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-q</code></td>
+            <td>Quiet mode: suppress most warnings and diagnostic messages.</td>
+            <td><code>ssh -q user@example.com</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Authentication and Key Handling</b></li>
+    <br/>
+    <ul>
+        <li>Options related to authentication behavior and keys.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-i &lt;identity_file&gt;</code></td>
+            <td>Use specified private key file (repeated here because it is so common).</td>
+            <td><code>ssh -i ~/.ssh/id_ed25519 user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-A</code></td>
+            <td>Enable SSH agent forwarding (forward your local agent to the remote host).</td>
+            <td><code>ssh -A user@jumphost</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-a</code></td>
+            <td>Disable SSH agent forwarding (explicitly turn it off).</td>
+            <td><code>ssh -a user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-K</code></td>
+            <td>Enable GSSAPI-based authentication (Kerberos etc.), if configured.</td>
+            <td><code>ssh -K user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o PreferredAuthentications=&lt;methods&gt;</code></td>
+            <td>Specify which authentication methods to try (e.g., <code>publickey,password</code>).</td>
+            <td><code>ssh -o PreferredAuthentications=publickey user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o IdentitiesOnly=yes</code></td>
+            <td>Use only the explicitly specified identities (not every key from the agent).</td>
+            <td><code>ssh -i ~/.ssh/work_rsa -o IdentitiesOnly=yes user@host</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Host Key Checking and Security</b></li>
+    <br/>
+    <ul>
+        <li>Options controlling how SSH verifies the server identity.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-o StrictHostKeyChecking=yes|no|ask</code></td>
+            <td>
+                Control behavior when a host key changes or is unknown:<br/>
+                <b>yes</b> = refuse; <b>no</b> = accept automatically; <b>ask</b> = prompt.
+            </td>
+            <td><code>ssh -o StrictHostKeyChecking=ask user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o UserKnownHostsFile=&lt;file&gt;</code></td>
+            <td>Use a particular known-hosts file instead of <code>~/.ssh/known_hosts</code>.</td>
+            <td><code>ssh -o UserKnownHostsFile=./known_hosts user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o VerifyHostKeyDNS=yes|no</code></td>
+            <td>Check host keys via DNS (SSHFP records), if configured.</td>
+            <td><code>ssh -o VerifyHostKeyDNS=yes user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o HostKeyAlgorithms=&lt;list&gt;</code></td>
+            <td>Specify which host key algorithms to accept (useful when dealing with older servers).</td>
+            <td><code>ssh -o HostKeyAlgorithms=ssh-ed25519 user@oldhost</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Port Forwarding and Tunneling</b></li>
+    <br/>
+    <ul>
+        <li>These options are used to tunnel TCP traffic through an SSH connection.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-L &lt;local_port&gt;:&lt;host&gt;:&lt;host_port&gt;</code></td>
+            <td>
+                Local port forward:<br/>
+                listen on local port and forward to <code>host:host_port</code> from the remote side.
+            </td>
+            <td><code>ssh -L 8080:localhost:3000 user@server</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-R &lt;remote_port&gt;:&lt;host&gt;:&lt;host_port&gt;</code></td>
+            <td>
+                Remote port forward:<br/>
+                listen on remote port and forward back to <code>host:host_port</code> on your local side.
+            </td>
+            <td><code>ssh -R 9000:localhost:3000 user@server</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-D &lt;local_port&gt;</code></td>
+            <td>
+                Dynamic port forwarding (SOCKS proxy) on the given local port.<br/>
+                Useful for tunneling arbitrary traffic through SSH.
+            </td>
+            <td><code>ssh -D 1080 user@server</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-N</code></td>
+            <td>Do not execute a remote command; only forward ports (no shell).</td>
+            <td><code>ssh -N -L 5432:db.internal:5432 user@bastion</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-f</code></td>
+            <td>Run SSH in the background (after asking for passwords / passphrases).</td>
+            <td><code>ssh -f -N -L 8080:localhost:3000 user@server</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-g</code></td>
+            <td>Allow remote hosts to connect to local forwarded ports (for <code>-L</code> / <code>-D</code>).</td>
+            <td><code>ssh -g -L 8080:localhost:3000 user@server</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Jump Hosts and Proxies</b></li>
+    <br/>
+    <ul>
+        <li>Options for connecting to a host via intermediate servers.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-J &lt;user@jump&gt;[,&lt;user@jump2&gt;...]</code></td>
+            <td>
+                Use one or more jump hosts (proxy jumps).<br/>
+                SSH will connect through these hosts to reach the final destination.
+            </td>
+            <td><code>ssh -J jumphost user@target</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o ProxyCommand=&lt;command&gt;</code></td>
+            <td>Use a custom command to connect to the server (legacy way to implement jump hosts).</td>
+            <td><code>ssh -o ProxyCommand="ssh jumphost nc %h %p" user@target</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-o ProxyJump=&lt;host&gt;</code></td>
+            <td>Same as <code>-J</code>, for use in config files.</td>
+            <td><code>ssh -o ProxyJump=jumphost user@target</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>X11 Forwarding and Terminal Behavior</b></li>
+    <br/>
+    <ul>
+        <li>Options that affect how the terminal and graphical forwarding behave.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-X</code></td>
+            <td>Enable X11 forwarding (trusted or untrusted based on server config; sometimes restricted).</td>
+            <td><code>ssh -X user@remote</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-Y</code></td>
+            <td>Enable trusted X11 forwarding (less restricted, but requires caution).</td>
+            <td><code>ssh -Y user@remote</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-t</code></td>
+            <td>Force pseudo-tty allocation (useful when running interactive commands like <code>top</code> or <code>sudo</code>).</td>
+            <td><code>ssh -t user@remote "sudo journalctl -f"</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-T</code></td>
+            <td>Disable pseudo-tty allocation (never allocate a terminal).</td>
+            <td><code>ssh -T git@github.com</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Debugging, Logging, and ControlMaster</b></li>
+    <br/>
+    <ul>
+        <li>Options for seeing what SSH is doing and reusing connections.</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Description</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-v</code>, <code>-vv</code>, <code>-vvv</code></td>
+            <td>
+                Increase verbosity of logging (more <code>v</code> = more detailed).<br/>
+                Useful for debugging handshake/auth problems.
+            </td>
+            <td><code>ssh -vv user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-E &lt;logfile&gt;</code></td>
+            <td>Append debug logs to the specified file.</td>
+            <td><code>ssh -vvE ssh.log user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-M</code></td>
+            <td>Place the SSH connection into &quot;master&quot; mode for connection sharing (ControlMaster).</td>
+            <td><code>ssh -M -S /tmp/ssh-sock user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-S &lt;ctl_socket&gt;</code></td>
+            <td>
+                Specify the control socket path used for ControlMaster/ControlPath connections.<br/>
+                Allows subsequent SSH calls to reuse the same TCP connection.
+            </td>
+            <td><code>ssh -S /tmp/ssh-sock user@host</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-O check|forward|exit</code></td>
+            <td>
+                Send control commands to an existing master connection (check status, request port forwarding, or close it).
+            </td>
+            <td><code>ssh -O check -S /tmp/ssh-sock user@host</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Generic <code>-o</code> Option (Config Key = Value)</b></li>
+    <br/>
+    <ul>
+        <li><code>-o</code> lets you specify any SSH config directive on the command line.</li>
+        <li>Common patterns:</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Example <code>-o</code> usage</th>
+            <th>Meaning</th>
+        </tr>
+
+        <tr>
+            <td><code>-o ConnectTimeout=5</code></td>
+            <td>Fail if connection cannot be established within 5 seconds.</td>
+        </tr>
+
+        <tr>
+            <td><code>-o ServerAliveInterval=30</code></td>
+            <td>Send keepalive messages every 30 seconds to avoid idle disconnections.</td>
+        </tr>
+
+        <tr>
+            <td><code>-o ServerAliveCountMax=3</code></td>
+            <td>After 3 unanswered keepalives, SSH will terminate the connection.</td>
+        </tr>
+
+        <tr>
+            <td><code>-o LogLevel=ERROR</code></td>
+            <td>Show only error messages (less verbose than the default).</td>
+        </tr>
+
+        <tr>
+            <td><code>-o Compression=yes</code></td>
+            <td>Enable compression (same effect as <code>-C</code>).</td>
+        </tr>
+    </table>
+    <br/><br/>
+</ol>
 <!-- * * * * * * * * * * * * * * -->
 
 
