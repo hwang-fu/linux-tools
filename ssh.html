@@ -150,6 +150,7 @@
         <li><a href="#ssh-options">Options</a></li>
         <li><a href="#ssh-keygen-intro">About <code>ssh-keygen</code></a></li>
         <li><a href="#ssh-authorized-keys">Multiple Public Keys</a></li>
+        <li><a href="#ssh-config">How to Write a SSH Config File?</a></li>
     </ul>
 </nav>
 <hr/>
@@ -1400,6 +1401,407 @@ chmod 600 ~/.ssh/authorized_keys
 
     <ul>
         <li>If authentication suddenly stops working after you edit the file, check these permissions first.</li>
+    </ul>
+    <br/><br/>
+</ol>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+<h3 id="ssh-config">How to Write a SSH Config File</h3>
+<ol>
+
+    <li>What Is <code>~/.ssh/config</code>?</li>
+    <ul>
+        <br/>
+        <li>The SSH client can read settings from a configuration file, usually <code>~/.ssh/config</code> (user-level) or <code>/etc/ssh/ssh_config</code> (system-wide).</li>
+        <br/>
+        <li>With this file you can:
+            <ul>
+                <li>define <b>short aliases</b> for hosts (e.g. <code>ssh my-server</code>),</li>
+                <li>set a <b>default user</b>, port, identity file, etc.,</li>
+                <li>configure <b>jump hosts</b> (bastions),</li>
+                <li>configure <b>port forwarding</b>, keep-alives, timeouts,</li>
+                <li>apply options conditionally (with <code>Match</code>).</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>File Location and Basic Structure</b></li>
+    <br/>
+    <ul>
+        <li>User config file path:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">~/.ssh/config
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Permissions should be restrictive (otherwise OpenSSH may ignore it):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">chmod 600 ~/.ssh/config
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Basic structure is a series of <b>Host blocks</b>:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">Host ALIAS_OR_PATTERN
+    Option1 value
+    Option2 value
+    ...
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Indentation is not required but strongly recommended for readability.</li>
+        <li>Options inside a <code>Host</code> block apply only to matching hosts.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Minimal Working Example</b></li>
+    <br/>
+    <ul>
+        <li>Example: define a simple shortcut to an SSH server:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">Host my-server
+    HostName 203.0.113.42
+    User ubuntu
+    IdentityFile ~/.ssh/id_myserver
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Now you can connect with just:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh my-server
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Instead of:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh -i ~/.ssh/id_myserver ubuntu@203.0.113.42
+</code></pre>
+    <br/><br/>
+
+
+    <li><b>Common SSH Config Directives</b></li>
+    <br/>
+    <ul>
+        <li>Some of the most frequently used keywords in <code>ssh_config</code>:</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Directive</th>
+            <th>Meaning</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>Host</code></td>
+            <td>Start a block of settings for a host alias or pattern.</td>
+            <td><code>Host my-server</code></td>
+        </tr>
+
+        <tr>
+            <td><code>HostName</code></td>
+            <td>Real DNS name or IP to connect to.</td>
+            <td><code>HostName 203.0.113.42</code></td>
+        </tr>
+
+        <tr>
+            <td><code>User</code></td>
+            <td>Remote login user (same as <code>ssh user@host</code>).</td>
+            <td><code>User ubuntu</code></td>
+        </tr>
+
+        <tr>
+            <td><code>Port</code></td>
+            <td>Port number (default 22).</td>
+            <td><code>Port 2222</code></td>
+        </tr>
+
+        <tr>
+            <td><code>IdentityFile</code></td>
+            <td>Path to the private key to use.</td>
+            <td><code>IdentityFile ~/.ssh/id_myserver</code></td>
+        </tr>
+
+        <tr>
+            <td><code>IdentitiesOnly</code></td>
+            <td>If <code>yes</code>, use only the keys listed here, not all from ssh-agent.</td>
+            <td><code>IdentitiesOnly yes</code></td>
+        </tr>
+
+        <tr>
+            <td><code>ForwardAgent</code></td>
+            <td>Forward your local ssh-agent to the remote host (<code>yes</code>/<code>no</code>).</td>
+            <td><code>ForwardAgent yes</code></td>
+        </tr>
+
+        <tr>
+            <td><code>ProxyJump</code></td>
+            <td>Jump host (bastion) for connecting to another host.</td>
+            <td><code>ProxyJump bastion.example.com</code></td>
+        </tr>
+
+        <tr>
+            <td><code>LocalForward</code></td>
+            <td>Set up local port forwarding (<code>local_port host:host_port</code>).</td>
+            <td><code>LocalForward 8080 localhost:3000</code></td>
+        </tr>
+
+        <tr>
+            <td><code>RemoteForward</code></td>
+            <td>Set up remote port forwarding.</td>
+            <td><code>RemoteForward 9000 localhost:3000</code></td>
+        </tr>
+
+        <tr>
+            <td><code>ServerAliveInterval</code></td>
+            <td>Send keepalive every N seconds.</td>
+            <td><code>ServerAliveInterval 30</code></td>
+        </tr>
+
+        <tr>
+            <td><code>ServerAliveCountMax</code></td>
+            <td>Number of unanswered keepalives allowed before disconnect.</td>
+            <td><code>ServerAliveCountMax 3</code></td>
+        </tr>
+
+        <tr>
+            <td><code>StrictHostKeyChecking</code></td>
+            <td>How to handle unknown/changed host keys (<code>yes/no/ask</code>).</td>
+            <td><code>StrictHostKeyChecking ask</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Multiple Hosts and Wildcards</b></li>
+    <br/>
+    <ul>
+        <li>You can use patterns in <code>Host</code>:
+            <ul>
+                <li><code>*</code> matches any string</li>
+                <li><code>?</code> matches any single character</li>
+            </ul>
+        </li>
+        <li>Examples:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">Host github.com
+    User git
+    IdentityFile ~/.ssh/id_github
+
+Host *.example.com
+    User deploy
+    IdentityFile ~/.ssh/id_company
+
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+</code></pre>
+
+    <ul>
+        <li>Order matters: <b>the first matching Host block wins</b> for each option.</li>
+        <li>So you typically put more specific <code>Host</code> entries <b>before</b> generic ones like <code>Host *</code>.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Practical Examples: GitHub, Personal Server, Jump Host</b></li>
+    <br/>
+    <ul>
+        <li>Example config for some common real-world cases:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers"># 1) GitHub SSH
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_github
+    IdentitiesOnly yes
+
+# 2) Personal VPS
+Host vps
+    HostName 198.51.100.10
+    User root
+    Port 22
+    IdentityFile ~/.ssh/id_vps
+    IdentitiesOnly yes
+    ServerAliveInterval 30
+    ServerAliveCountMax 3
+
+# 3) Internal server via jump host (bastion)
+Host bastion
+    HostName bastion.mycompany.com
+    User ubuntu
+    IdentityFile ~/.ssh/id_company
+
+Host internal-app
+    HostName internal.app.local
+    User ubuntu
+    ProxyJump bastion
+    IdentityFile ~/.ssh/id_company
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Now you can simply run:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh github.com
+ssh vps
+ssh internal-app
+</code></pre>
+    <br/><br/>
+
+
+    <li><b>Using</b> <code>Include</code> <b>to Split Configs</b></li>
+    <br/>
+    <ul>
+        <li>If your config becomes large, you can split it into multiple files and include them.</li>
+        <li>Directive: <code>Include path_or_pattern</code></li>
+        <li>Example structure:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">~/.ssh/
+    config
+    config.d/
+        github.conf
+        work.conf
+        personal.conf
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Main <code>~/.ssh/config</code>:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">Include ~/.ssh/config.d/*.conf
+
+Host *
+    ServerAliveInterval 60
+    ServerAliveCountMax 3
+</code></pre>
+
+    <ul>
+        <li>Each <code>*.conf</code> file can hold host blocks grouped by purpose (e.g., work vs personal).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Conditional Config with</b> <code>Match</code> <b>Blocks</b></li>
+    <br/>
+    <ul>
+        <li><code>Match</code> allows conditional config based on:
+            <ul>
+                <li>user,</li>
+                <li>host,</li>
+                <li>address,</li>
+                <li>originalhost,</li>
+                <li>localaddress, etc.</li>
+            </ul>
+        </li>
+        <li>Syntax:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">Match CONDITION1 CONDITION2 ...
+    Option value
+    ...
+Match all
+    # reset conditions
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Example: special options only when connecting from a specific local IP:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">Match host my-server localaddress 192.168.1.100
+    Compression yes
+    ServerAliveInterval 15
+
+Match all
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Example: different identity for a specific user:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">Match user deploy
+    IdentitiesOnly yes
+    IdentityFile ~/.ssh/id_deploy
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Testing and Debugging Your Config</b></li>
+    <br/>
+    <ul>
+        <li>If something doesn&apos;t behave as expected, you can print the fully resolved config:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh -G my-server
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Use verbose output to see which options are in effect and how SSH connects:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh -vvv my-server
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Common debugging tips:
+            <ul>
+                <li>Check file permissions on <code>~/.ssh</code> and its contents.</li>
+                <li>Ensure you didn&apos;t accidentally put spaces instead of tabs in critical places (spaces are fine; just avoid weird characters).</li>
+                <li>Remember: first matching <code>Host</code> entry for each setting wins.</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Security Considerations</b></li>
+    <ul>
+        <br/>
+        <li>Keep your private keys safe:
+            <ul>
+                <li>Permissions: <code>chmod 600 ~/.ssh/id_*</code></li>
+                <li>Use passphrases for important keys.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Be careful with:
+            <ul>
+                <li><code>ForwardAgent yes</code> (only enable when you trust the remote host).</li>
+                <li><code>StrictHostKeyChecking no</code> (can open you to MITM attacks).</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Use separate keys/config entries for different services (e.g., work vs personal) to limit damage if one key is compromised.</li>
     </ul>
     <br/><br/>
 </ol>
