@@ -152,6 +152,7 @@
         <li><a href="#systemd-info">Viewing Information in systemd</a></li>
         <li><a href="#systemd-services">Working with Services</a></li>
         <li><a href="#systemd-changing-states">Changing System States</a></li>
+        <li><a href="#systemd-custom-services">Creating Custom Services</a></li>
     </ul>
 </nav>
 <hr/>
@@ -953,6 +954,280 @@ sudo systemctl hibernate    # Hibernate
     </ul>
     <br/><br/>
 </ol>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+<h3 id="systemd-custom-services">Creating Custom Services in <code>systemd</code></h3>
+<ol>
+
+    <li><b>Overview</b></li>
+    <ul>
+        <br/>
+        <li>You can use <code>systemd</code> to run your own scripts, servers, background jobs, or applications as managed services.</li>
+        <br/>
+        <li>Custom services:
+            <ul>
+                <li>start automatically at boot,</li>
+                <li>restart on failure,</li>
+                <li>run in a clean environment,</li>
+                <li>log output via <code>journalctl</code>.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>This chapter shows how to create, install, and manage a fully custom <code>.service</code> file.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Where to Put Custom Service Files</b></li>
+    <br/>
+    <ul>
+        <li>System-level services (global):</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">/etc/systemd/system/myapp.service
+</code></pre>
+
+    <ul>
+        <li>User-level services (no root required):</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">~/.config/systemd/user/myapp.service
+</code></pre>
+
+    <ul>
+        <li>System-level services run regardless of logged-in users.</li>
+        <li>User-level services require <code>systemctl --user</code>.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Minimal Custom Service Example</b></li>
+    <br/>
+    <ul>
+        <li>A simple service that runs a Python script:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Unit]
+Description=My Python App
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/myapp/app.py
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+    <ul>
+        <li>Place it at:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">/etc/systemd/system/myapp.service
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Enable and start:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl daemon-reload
+sudo systemctl enable myapp
+sudo systemctl start myapp
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Using Working Directory and Environment Variables</b></li>
+    <br/>
+    <ul>
+        <li>Many applications require a specific working directory or configuration values.</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Unit]
+Description=Node.js Backend
+
+[Service]
+WorkingDirectory=/opt/backend
+ExecStart=/usr/bin/node server.js
+Environment="NODE_ENV=production"
+Environment="API_KEY=12345"
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+    <ul>
+        <li>Environment variables can also come from a file:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">EnvironmentFile=/etc/backend/env.conf
+</code></pre>
+
+    <ul>
+        <li>Great for secrets (although better to use secret management solutions in production).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Restart Policies</b></li>
+    <br/>
+    <ul>
+        <li>To ensure your service recovers automatically:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Service]
+Restart=on-failure
+RestartSec=3
+</code></pre>
+
+    <ul>
+        <li>Common Restart options:</li>
+        <ul>
+            <li><code>no</code> — never restart</li>
+            <li><code>on-failure</code> — restart on non-zero exit</li>
+            <li><code>always</code> — always restart</li>
+            <li><code>on-abnormal</code></li>
+        </ul>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Running Services as a Dedicated User</b></li>
+    <br/>
+    <ul>
+        <li>Run your app under a restricted user for security:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Service]
+User=myapp
+Group=myapp
+ExecStart=/usr/bin/myapp
+</code></pre>
+
+    <ul>
+        <li>Create the user if it doesn’t exist:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo useradd --system --no-create-home myapp
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Capturing Logs (journalctl)</b></li>
+    <br/>
+    <ul>
+        <li>All output from your app (stdout + stderr) goes into systemd’s journal automatically.</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u myapp -f
+</code></pre>
+
+    <ul>
+        <li>Log options can be customized:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">StandardOutput=journal
+StandardError=journal
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Creating Services That Wait for Other Units</b></li>
+    <br/>
+    <ul>
+        <li>Use <code>After=</code> and <code>Requires=</code>:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Unit]
+Description=Backend App
+After=network.target
+Requires=network.target
+</code></pre>
+
+    <ul>
+        <li><code>After</code> controls ordering only.</li>
+        <li><code>Requires</code> ensures the dependency must be started.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Running a Script as a Service</b></li>
+    <br/>
+    <ul>
+        <li></li>
+        <li>Write your script:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">#!/bin/bash
+echo "Hello from my service!"
+sleep 60
+</code></pre>
+
+    <ul>
+        <li>Make it executable and place a service file:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Unit]
+Description=My Script Service
+
+[Service]
+ExecStart=/usr/local/bin/myscript.sh
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Reloading and Updating Services</b></li>
+    <br/>
+    <ul>
+        <li>After changing any <code>.service</code> file:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl daemon-reload
+sudo systemctl restart myapp
+</code></pre>
+
+    <ul>
+        <li><b>daemon-reload</b> is required to make systemd notice changes.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Disabling, Masking, and Removing</b></li>
+    <br/>
+    <ul>
+        <li>Disable autostart:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl disable myapp
+</code></pre>
+
+    <ul>
+        <li>Stop permanently (block all starts):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl mask myapp
+</code></pre>
+
+    <ul>
+        <li>Remove the service:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo rm /etc/systemd/system/myapp.service
+sudo systemctl daemon-reload
+</code></pre>
+
+    <br/><br/>
 <!-- * * * * * * * * * * * * * * -->
 
 
