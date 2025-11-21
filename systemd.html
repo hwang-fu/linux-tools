@@ -150,6 +150,7 @@
     <ul style="line-height: 1.8;">
         <li><a href="#systemd-intro">Introduction</a></li>
         <li><a href="#systemd-info">Viewing Information in systemd</a></li>
+        <li><a href="#systemd-services">Working with Services</a></li>
     </ul>
 </nav>
 <hr/>
@@ -528,6 +529,256 @@ journalctl -p crit
                 <li><code>multi-user.target</code></li>
             </ul>
         </li>
+    </ul>
+
+    <br/><br/>
+</ol>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+<h3 id="systemd-services">Working with Services in <code>systemd</code></h3>
+<ol>
+
+    <li><b>Overview</b></li>
+    <br/>
+    <ul>
+        <li>Services in <code>systemd</code> are defined by <code>.service</code> unit files.</li>
+        <li>They represent background processes or daemons such as:
+            <ul>
+                <li>sshd</li>
+                <li>nginx</li>
+                <li>docker</li>
+                <li>cron</li>
+                <li>your own apps</li>
+            </ul>
+        </li>
+        <li>This chapter focuses on how to <b>start</b>, <b>stop</b>, <b>enable</b>, <b>restart</b>, and <b>inspect</b> systemd services.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Starting and Stopping Services</b></li>
+    <br/>
+    <ul>
+        <li>To immediately start a service:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl start nginx
+</code></pre>
+
+    <ul>
+        <li>To stop a running service:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl stop nginx
+</code></pre>
+
+    <ul>
+        <li>Restart a service (loads new config):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl restart nginx
+</code></pre>
+
+    <ul>
+        <li>Reload configuration without restarting the entire service:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl reload nginx
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Enabling and Disabling Services at Boot</b></li>
+    <br/>
+    <ul>
+        <li>Enable a service so it starts automatically at boot:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl enable nginx
+</code></pre>
+
+    <ul>
+        <li>Disable it:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl disable nginx
+</code></pre>
+
+    <ul>
+        <li>Check if a service is enabled:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl is-enabled nginx
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Checking Service Status</b></li>
+    <br/>
+    <ul>
+        <li>Basic status:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl status nginx
+</code></pre>
+
+    <ul>
+        <li>Displays:
+            <ul>
+                <li>active / inactive / failed state</li>
+                <li>process ID, CPU, memory</li>
+                <li>recent logs</li>
+                <li>unit file info</li>
+            </ul>
+        </li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>Viewing Logs of a Service</b></li>
+    <br/>
+    <ul>
+        <li>Logs are collected by <code>systemd-journald</code> and viewed via <code>journalctl</code>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx
+</code></pre>
+
+    <ul>
+        <li>Follow logs in real time:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx -f
+</code></pre>
+
+    <ul>
+        <li>Show only current boot:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx -b
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Reloading systemd After Creating or Editing Unit Files</b></li>
+    <br/>
+    <ul>
+        <li>After editing files in <code>/etc/systemd/system/</code> or creating new services, you must reload systemd:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl daemon-reload
+</code></pre>
+
+    <ul>
+        <li>This updates systemd’s internal unit registry.</li>
+    </ul>
+
+    <ul>
+        <li>Then restart or start the updated service:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl restart myapp.service
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Masking and Unmasking Services</b></li>
+    <br/>
+    <ul>
+        <li>Mask a service to prevent it from starting <u>even manually</u>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl mask nginx
+</code></pre>
+
+    <ul>
+        <li>Unmask it:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl unmask nginx
+</code></pre>
+
+    <ul>
+        <li>This is stronger than <code>disable</code> and is used to stop dangerous or conflicting services.</li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>Viewing All Services</b></li>
+    <br/>
+    <ul>
+        <li>List only services (not timers, sockets, etc.):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-units --type=service
+</code></pre>
+
+    <br/>
+    <ul>
+        <li>Show services including inactive ones:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-unit-files --type=service
+</code></pre>
+
+    <ul>
+        <li>This shows installed service files regardless of running state.</li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>Autorestart and Service Recovery</b></li>
+    <br/>
+    <ul>
+        <li>Services can be configured to restart automatically on crash.</li>
+        <li>Inside a <code>.service</code> file:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Service]
+Restart=on-failure
+RestartSec=5
+</code></pre>
+
+    <ul>
+        <li>Useful for long-running daemons or servers.</li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>Environments and Working Directory</b></li>
+    <br/>
+    <ul>
+        <li>You can set environment variables:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Service]
+Environment="APP_ENV=production"
+WorkingDirectory=/opt/myapp
+ExecStart=/usr/bin/python3 app.py
+</code></pre>
+
+    <ul>
+        <li>Or load them from a file:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">EnvironmentFile=/etc/myapp/env.conf
+</code></pre>
+
+    <ul>
+        <li>This is commonly used for secrets and configs.</li>
     </ul>
 
     <br/><br/>
