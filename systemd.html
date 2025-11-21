@@ -83,11 +83,6 @@
     .token.keyword {
         font-weight: 500;
     }
-    /*
-    .token.comment {
-        color: #888;
-    }
-    */
 
     .red-underline {
         text-decoration-line: underline;
@@ -154,7 +149,7 @@
 <nav id="toc" style="margin-bottom: 2rem;">
     <h2> <img src="resources/" alt="Logo" class="nav-icon"/> Documentation Index</h2>
     <ul style="line-height: 1.8;">
-        <li><a href="#"></a></li>
+        <li><a href="#systemd-intro">Introduction</a></li>
     </ul>
 </nav>
 <hr/>
@@ -162,18 +157,110 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3 id="systemd-intro">Introduction to <code>systemd</code></h3>
 <ol>
-    <li></li>
+
+    <li><b>What Is systemd?</b></li>
+    <ul>
+        <br/>
+        <li><code>systemd</code> is the modern <b>init system</b> used by most Linux distributions (Fedora, Ubuntu, Debian, openSUSE, Arch, etc.).</li>
+        <br/>
+        <li>It is the first process started at boot (PID 1) and is responsible for:
+            <ul>
+                <li>booting and shutting down the system,</li>
+                <li>starting services,</li>
+                <li>managing daemons,</li>
+                <li>handling logs and timers.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>It replaces the older SysV init (<code>/etc/init.d/*</code>) with a faster and more reliable parallel boot model.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Systemd’s Core Concepts</b></li>
     <br/>
+    <ul>
+        <li><b>Units</b>: the building blocks systemd manages. Types include:
+            <ul>
+                <li><code>.service</code> — background daemons</li>
+                <li><code>.timer</code> — scheduled tasks</li>
+                <li><code>.target</code> — logical groups (similar to runlevels)</li>
+                <li><code>.mount</code> — mount points</li>
+                <li><code>.socket</code> — socket activation units</li>
+            </ul>
+        </li>
+        <br/>
+        <li><b>Systemctl</b>: the command-line tool you use to interact with systemd.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Most Common systemctl Commands</b></li>
     <br/>
-    <li></li>
+    <ul>
+        <li>Start / Stop / Restart a service:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl start nginx
+sudo systemctl stop nginx
+sudo systemctl restart nginx
+</code></pre>
+
+    <ul>
+        <li>Enable or disable at boot:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl enable nginx
+sudo systemctl disable nginx
+</code></pre>
+
+    <ul>
+        <li>Check service status:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl status nginx
+</code></pre>
+
+    <ul>
+        <li>View logs (via systemd-journald):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>A Minimal systemd Service Example</b></li>
     <br/>
-    <br/>
-    <li></li>
-    <br/>
+    <ul>
+        <li>Create a file: <code>/etc/systemd/system/myapp.service</code></li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">[Unit]
+Description=My Sample App
+
+[Service]
+ExecStart=/usr/bin/python3 /opt/myapp/app.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+</code></pre>
+
+    <ul>
+        <li>Activate it:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">sudo systemctl daemon-reload
+sudo systemctl start myapp
+sudo systemctl enable myapp
+</code></pre>
+
+    <br/><br/>
 </ol>
-<br/>
 <!-- * * * * * * * * * * * * * * -->
 
 
