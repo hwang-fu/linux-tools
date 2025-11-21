@@ -149,6 +149,7 @@
         <li><a href="#ssh-intro">Introduction</a></li>
         <li><a href="#ssh-options">Options</a></li>
         <li><a href="#ssh-keygen-intro">About <code>ssh-keygen</code></a></li>
+        <li><a href="#ssh-authorized-keys">Multiple Public Keys</a></li>
     </ul>
 </nav>
 <hr/>
@@ -1184,7 +1185,224 @@ cat ~/.ssh/id_server.pub  # copy this line
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="ssh-authorized-keys">SSH authorized_keys and Multiple Public Keys</h3>
+<ol>
 
+    <li><b>What Is</b> <code>~/.ssh/authorized_keys</code><b>?</b></li>
+    <br/>
+    <ul>
+        <li>On the <b>server</b>, each user can have a file <code>~/.ssh/authorized_keys</code>.</li>
+        <br/>
+        <li>This file tells the SSH daemon: &ldquo;These public keys are allowed to log in as this user.&rdquo;</li>
+        <br/>
+        <li>When you connect using a private key from your client:
+            <ul>
+                <li>The server checks whether the matching <b>public key</b> exists in <code>authorized_keys</code> for the target user.</li>
+                <li>If there is a match and the signature is valid, login is allowed (subject to restrictions).</li>
+            </ul>
+        </li>
+        <br/>
+        <li>So, <code>authorized_keys</code> is basically the <b>allow list of public keys</b> for that Unix account.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Can It Contain Multiple Public Keys?</b></li>
+    <br/>
+    <ul>
+        <li><b>Yes.</b> <code>~/.ssh/authorized_keys</code> can contain <b>many</b> public keys.</li>
+        <br/>
+        <li>The usual convention is:
+            <ul>
+                <li><b>one public key per line</b>,</li>
+                <li>optionally followed by a comment (e.g. which machine or person it belongs to).</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Example structure (conceptually):</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMyKeyForLaptop    laptop
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAnotherKeyForPC   desktop
+ssh-rsa     AAAAB3NzaC1yc2EAAAADAQABAAABAQDemoKey...   old-server
+</code></pre>
+
+    <ul>
+        <li>Each line is an independent authorized key. Any matching private key from these lines can log in as this user.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Format of a Single Line in</b> <code>authorized_keys</code></li>
+    <br/>
+    <ul>
+        <li>A typical line has this basic shape:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">&lt;key-type&gt; &lt;base64-key-data&gt; [&lt;comment&gt;]
+</code></pre>
+
+    <ul>
+        <li>Examples:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBlaBlaBla... my-laptop
+ssh-rsa     AAAAB3NzaC1yc2EAAAADAQABAAABAQDemo... old-key
+</code></pre>
+
+    <ul>
+        <li><code>&lt;key-type&gt;</code> could be:
+            <ul>
+                <li><code>ssh-ed25519</code></li>
+                <li><code>ssh-rsa</code> (legacy)</li>
+                <li><code>ecdsa-sha2-nistp256</code></li>
+                <li>etc., depending on what your SSH version supports.</li>
+            </ul>
+        </li>
+        <br/>
+        <li><code>&lt;base64-key-data&gt;</code> is a long base64 string representing the public key.</li>
+        <br/>
+        <li><code>&lt;comment&gt;</code> is free text, commonly:
+            <ul>
+                <li>an email address,</li>
+                <li>a hostname,</li>
+                <li>or &ldquo;who/what this key belongs to&rdquo;.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>For multiple keys, you just add another line with this format.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Adding Multiple Keys Manually</b></li>
+    <br/>
+    <ul>
+        <li>Suppose you have two public key files on your client:
+            <ul>
+                <li><code>id_ed25519.pub</code> (laptop)</li>
+                <li><code>work_ed25519.pub</code> (work machine)</li>
+            </ul>
+        </li>
+        <br/>
+        <li>On the server, you can append both to <code>authorized_keys</code>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">cat id_ed25519.pub &gt;&gt; ~/.ssh/authorized_keys
+cat work_ed25519.pub &gt;&gt; ~/.ssh/authorized_keys
+</code></pre>
+
+    <ul>
+        <li>After that, your <code>authorized_keys</code> might look like:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAALaptopKeyBase64... laptop
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAASomeWorkKeyBase64... work
+</code></pre>
+
+    <ul>
+        <li>Either corresponding private key can now log in as this user.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Using</b> <code>ssh-copy-id</code> <b>to Add Keys</b></li>
+    <br/>
+    <ul>
+        <li>On many systems, there is a convenience tool <code>ssh-copy-id</code>, which:
+            <ul>
+                <li>copies a local public key to the server,</li>
+                <li>appends it to <code>~/.ssh/authorized_keys</code>,</li>
+                <li>and fixes permissions if needed.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Basic usage:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-copy-id -i ~/.ssh/id_ed25519.pub user@server
+</code></pre>
+
+    <ul>
+        <li>If you run this multiple times with different keys, they will all be added as extra lines to <code>authorized_keys</code>.</li>
+        <li>This is a safe and simple way to maintain multiple authorized keys.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Per-Key Restrictions and Options</b></li>
+    <br/>
+    <ul>
+        <li>Lines in <code>authorized_keys</code> can optionally start with <b>options</b> that restrict what the key is allowed to do.</li>
+        <br/>
+        <li>General shape:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">&lt;options&gt; &lt;key-type&gt; &lt;base64-key&gt; &lt;comment&gt;
+</code></pre>
+
+    <ul>
+        <li>Example: a key that can only run one specific command:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">command="/usr/local/bin/backup-script.sh" ssh-ed25519 AAAAC3Nz... backup-key
+</code></pre>
+
+    <ul>
+        <li>Other common options:
+            <ul>
+                <li><code>from="1.2.3.4"</code> – allow only from certain IPs.</li>
+                <li><code>no-port-forwarding</code></li>
+                <li><code>no-X11-forwarding</code></li>
+                <li><code>no-agent-forwarding</code></li>
+                <li><code>permitopen="host:port"</code></li>
+            </ul>
+        </li>
+        <br/>
+        <li>Each line can have its own options, so some keys may be highly restricted while others are full-login keys.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>How the Server Uses Multiple Keys</b></li>
+    <br/>
+    <ul>
+        <li>When you connect with SSH:
+            <ul>
+                <li>Your client offers one or more public keys (based on your local config, agent, etc.).</li>
+                <li>The server checks whether any of these appear in <code>authorized_keys</code> of the target user.</li>
+                <li>If it finds a match, it challenges the client to prove it has the corresponding private key.</li>
+                <li>If the cryptographic check succeeds and any per-key options are satisfied, you are logged in.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>So with multiple keys:
+            <ul>
+                <li>You can log in from different machines with different private keys.</li>
+                <li>You can gradually add new keys and later remove old ones by editing the file.</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>File Permissions (Important!)</b></li>
+    <br/>
+    <ul>
+        <li>SSH is strict about permissions. If they are too open, the server may ignore <code>authorized_keys</code>.</li>
+        <br/>
+        <li>Typical safe settings on the server:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">chmod 700 ~/.ssh
+chmod 600 ~/.ssh/authorized_keys
+</code></pre>
+
+    <ul>
+        <li>If authentication suddenly stops working after you edit the file, check these permissions first.</li>
+    </ul>
+    <br/><br/>
+</ol>
 <!-- * * * * * * * * * * * * * * -->
 
 
