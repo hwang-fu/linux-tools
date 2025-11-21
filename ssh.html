@@ -148,6 +148,7 @@
     <ul style="line-height: 1.8;">
         <li><a href="#ssh-intro">Introduction</a></li>
         <li><a href="#ssh-options">Options</a></li>
+        <li><a href="#ssh-keygen-intro">About <code>ssh-keygen</code></a></li>
     </ul>
 </nav>
 <hr/>
@@ -426,7 +427,7 @@ ssh-add ~/.ssh/id_ed25519</code></pre>
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3 id="ssh-options">Common <code>ssh</code> Command Options</h3>
+<h3 id="ssh-options">Common SSH Command Options</h3>
 <ol>
 
     <li><b>Overview</b></li>
@@ -791,11 +792,10 @@ ssh-add ~/.ssh/id_ed25519</code></pre>
     <br/><br/>
 
 
-    <li><b>Generic <code>-o</code> Option (Config Key = Value)</b></li>
+    <li><b>Generic</b> <code>-o</code> <b>Option (Config Key = Value)</b></li>
     <br/>
     <ul>
-        <li><code>-o</code> lets you specify any SSH config directive on the command line.</li>
-        <li>Common patterns:</li>
+        <li><code>-o</code> lets you specify any SSH config directive on the command line. Common patterns:</li>
     </ul>
     <br/>
 
@@ -830,6 +830,351 @@ ssh-add ~/.ssh/id_ed25519</code></pre>
             <td>Enable compression (same effect as <code>-C</code>).</td>
         </tr>
     </table>
+    <br/><br/>
+</ol>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+<h3 id="ssh-keygen-intro">Introduction to ssh-keygen</h3>
+<ol>
+
+    <li><b>What Is It?</b></li>
+    <ul>
+        <br/>
+        <li><code>ssh-keygen</code> is the standard tool (from OpenSSH) for creating and managing SSH key pairs.</li>
+        <br/>
+        <li>It is used to:
+            <ul>
+                <li>generate new SSH keys,</li>
+                <li>change key passphrases,</li>
+                <li>convert keys to different formats,</li>
+                <li>print public keys from private keys,</li>
+                <li>manage host keys / known_hosts entries.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>SSH keys are the recommended way to authenticate to remote servers instead of passwords.</li>
+        <br/>
+        <li>On Linux/macOS, <code>ssh-keygen</code> is usually installed by default together with <code>ssh</code>.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Basic Usage: Generating a Key Pair</b></li>
+    <br/>
+    <ul>
+        <li>The most common usage: generate a new key pair (private + public key):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -t ed25519 -C "your_email@example.com"</code></pre>
+
+    <ul>
+        <br/>
+        <li>Interactive steps:</li>
+        <ul>
+            <li><u>file path</u> – default is <code>~/.ssh/id_ed25519</code></li>
+            <li><u>passphrase</u> – optional but highly recommended</li>
+        </ul>
+        <br/>
+        <li>Result:</li>
+        <ul>
+            <li><code>~/.ssh/id_ed25519</code> → private key</li>
+            <li><code>~/.ssh/id_ed25519.pub</code> → public key</li>
+        </ul>
+        <br/>
+        <li>The public key is what you copy to remote servers (e.g., into <code>~/.ssh/authorized_keys</code>).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Key Types and Algorithms</b></li>
+    <br/>
+    <ul>
+        <li>You choose the algorithm with <code>-t</code>:</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Type</th>
+            <th>Option</th>
+            <th>Notes</th>
+        </tr>
+        <tr>
+            <td>Ed25519</td>
+            <td><code>-t ed25519</code></td>
+            <td>Modern, fast, short keys, recommended default if supported.</td>
+        </tr>
+        <tr>
+            <td>RSA</td>
+            <td><code>-t rsa</code></td>
+            <td>Widely supported, use 3072 or 4096 bits for security.</td>
+        </tr>
+        <tr>
+            <td>ECDSA</td>
+            <td><code>-t ecdsa</code></td>
+            <td>Elliptic curve, okay, but ed25519 is often preferred.</td>
+        </tr>
+        <tr>
+            <td>DSA</td>
+            <td><code>-t dsa</code></td>
+            <td>Deprecated/insecure, do not use.</td>
+        </tr>
+    </table>
+
+    <br/>
+    <ul>
+        <li>Example: strong RSA key:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -t rsa -b 4096 -C "your_email@example.com"</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Common Options (Quick Table)</b></li>
+    <br/>
+    <ul>
+        <li>Most frequently used command-line flags:</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Option</th>
+            <th>Meaning</th>
+            <th>Example</th>
+        </tr>
+
+        <tr>
+            <td><code>-t &lt;type&gt;</code></td>
+            <td>Key type (rsa, ed25519, ecdsa, ...).</td>
+            <td><code>ssh-keygen -t ed25519</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-b &lt;bits&gt;</code></td>
+            <td>Key size (mainly for RSA).</td>
+            <td><code>ssh-keygen -t rsa -b 4096</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-C &lt;comment&gt;</code></td>
+            <td>Add a comment (often an email or label).</td>
+            <td><code>ssh-keygen -C "laptop key"</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-f &lt;filename&gt;</code></td>
+            <td>Specify output file (private key path).</td>
+            <td><code>ssh-keygen -f ~/.ssh/myserver_ed25519</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-N &lt;passphrase&gt;</code></td>
+            <td>Set passphrase non-interactively (be careful with shell history).</td>
+            <td><code>ssh-keygen -N "mySecret" ...</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-p</code></td>
+            <td>Change the passphrase of an existing key.</td>
+            <td><code>ssh-keygen -p -f ~/.ssh/id_ed25519</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-y</code></td>
+            <td>Read a private key and print the corresponding public key.</td>
+            <td><code>ssh-keygen -y -f ~/.ssh/id_ed25519 &gt; id_ed25519.pub</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-l</code></td>
+            <td>Show fingerprint of a key.</td>
+            <td><code>ssh-keygen -l -f ~/.ssh/id_ed25519.pub</code></td>
+        </tr>
+
+        <tr>
+            <td><code>-E &lt;hash&gt;</code></td>
+            <td>Specify hash for fingerprints (e.g., <code>md5</code>, <code>sha256</code>).</td>
+            <td><code>ssh-keygen -l -E sha256 -f id_ed25519.pub</code></td>
+        </tr>
+    </table>
+    <br/><br/>
+
+
+    <li><b>Default Locations and File Names</b></li>
+    <br/>
+    <ul>
+        <li>By default, keys live under <code>~/.ssh/</code>:</li>
+    </ul>
+
+<pre><code class="language-plaintext line-numbers">~/.ssh/
+    id_ed25519        ← default ed25519 private key
+    id_ed25519.pub    ← its public key
+    id_rsa            ← default RSA private key
+    id_rsa.pub        ← its public key
+</code></pre>
+
+    <ul>
+        <br/>
+        <li>You can have <u>multiple keys</u> for different purposes:</li>
+        <ul>
+            <li><code>~/.ssh/id_github</code></li>
+            <li><code>~/.ssh/id_company</code></li>
+            <li><code>~/.ssh/id_personal_server</code></li>
+        </ul>
+        <br/>
+        <li>Use <code>-f</code> when generating to pick a non-default name:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -t ed25519 -f ~/.ssh/id_github -C "github key"</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Changing or Adding a Passphrase</b></li>
+    <br/>
+    <ul>
+        <li>To <b>add</b> or <b>change</b> a passphrase on an existing key:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -p -f ~/.ssh/id_ed25519</code></pre>
+
+    <ul>
+        <li>Interactive steps:</li>
+        <ul>
+            <li>Enter old passphrase (if any).</li>
+            <li>Enter new passphrase (or press Enter for empty, which is not recommended).</li>
+        </ul>
+        <li>This does <u>not</u> change the key itself, only how it is encrypted on disk.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Printing the Public Key from a Private Key</b> (<code>-y</code>)</li>
+    <br/>
+    <ul>
+        <li>If you lost your <code>.pub</code> file but still have the private key, you can regenerate the public key:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -y -f ~/.ssh/id_ed25519 &gt; ~/.ssh/id_ed25519.pub</code></pre>
+
+    <ul>
+        <li><code>-y</code> reads the private key, extracts the matching public key, and prints it to stdout.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Checking Key Fingerprints</b> (<code>-l</code>, <code>-E</code>)</li>
+    <br/>
+    <ul>
+        <li>Fingerprints help you verify that a key (or host) is the one you expect.</li>
+        <li>Example:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -l -f ~/.ssh/id_ed25519.pub</code></pre>
+
+    <ul>
+        <li>Add <code>-E sha256</code> or <code>-E md5</code> to specify hash algorithm:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -l -E sha256 -f ~/.ssh/id_ed25519.pub</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Managing</b> <code>known_hosts</code> <b>Entries</b></li>
+    <br/>
+    <ul>
+        <li><code>ssh-keygen</code> can also manipulate the <code>~/.ssh/known_hosts</code> file (where host keys are stored).</li>
+    </ul>
+    <br/>
+
+    <table>
+        <tr>
+            <th>Command</th>
+            <th>Meaning</th>
+        </tr>
+        <tr>
+            <td><code>ssh-keygen -F hostname</code></td>
+            <td>Find and print host keys for <code>hostname</code> in <code>known_hosts</code>.</td>
+        </tr>
+        <tr>
+            <td><code>ssh-keygen -R hostname</code></td>
+            <td>Remove all keys for <code>hostname</code> from <code>known_hosts</code> (useful if the remote host changed its key).</td>
+        </tr>
+    </table>
+
+    <br/>
+    <ul>
+        <li>Example: remove a stale known-host entry:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -R example.com</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Typical Real-World Workflows</b></li>
+    <br/>
+    <ul>
+        <li><b>Generate a key and use it for GitHub</b>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers"># 1) Generate key
+ssh-keygen -t ed25519 -f ~/.ssh/id_github -C "github-email@example.com"
+
+# 2) Print the public key
+cat ~/.ssh/id_github.pub
+
+# 3) Copy the printed key into GitHub &gt; Settings &gt; SSH and GPG keys
+
+# 4) Use in SSH config
+cat &gt;&gt; ~/.ssh/config &lt;&lt;EOF
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_github
+EOF
+</code></pre>
+
+    <br/>
+
+    <ul>
+        <li><b>Generate a key for a specific server</b>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">ssh-keygen -t ed25519 -f ~/.ssh/id_server -C "server key"
+
+# copy public key to server (if ssh-copy-id is available)
+ssh-copy-id -i ~/.ssh/id_server.pub user@server
+
+# or manually:
+cat ~/.ssh/id_server.pub  # copy this line
+# then paste it into server's ~/.ssh/authorized_keys
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Security Tips</b></li>
+    <br/>
+    <ul>
+        <li>Always protect your <u>private</u> key with correct file permissions (should be readable only by you):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">chmod 600 ~/.ssh/id_ed25519</code></pre>
+
+    <ul>
+        <li>Use a passphrase for keys on laptops or shared devices.</li>
+        <li>Consider using an SSH agent (<code>ssh-agent</code> + <code>ssh-add</code>) to avoid entering the passphrase every time.</li>
+        <li>Use modern key types (ed25519 or RSA 3072+/4096) rather than old ones (DSA).</li>
+    </ul>
     <br/><br/>
 </ol>
 <!-- * * * * * * * * * * * * * * -->
