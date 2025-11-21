@@ -147,9 +147,9 @@
 <!-- * * * * * * * * * * * * * * -->
 <hr/>
 <nav id="toc" style="margin-bottom: 2rem;">
-    <h2> <img src="resources/" alt="Logo" class="nav-icon"/> Documentation Index</h2>
     <ul style="line-height: 1.8;">
         <li><a href="#systemd-intro">Introduction</a></li>
+        <li><a href="#systemd-info">Viewing Information in systemd</a></li>
     </ul>
 </nav>
 <hr/>
@@ -268,7 +268,270 @@ sudo systemctl enable myapp
 
 
 <!-- * * * * * * * * * * * * * * -->
+<h3 id="systemd-info">Viewing Information in <code>systemd</code></h3>
+<ol>
 
+    <li><b>Overview</b></li>
+    <br/>
+    <ul>
+        <li><code>systemd</code> provides powerful tools to inspect:
+            <ul>
+                <li>service status,</li>
+                <li>logs,</li>
+                <li>unit dependencies,</li>
+                <li>boot performance,</li>
+                <li>failed units,</li>
+                <li>target states.</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Check the Status of a Service</b></li>
+    <br/>
+    <ul>
+        <li>The most common command:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl status nginx
+</code></pre>
+
+    <ul>
+        <li>Shows:
+            <ul>
+                <li>active/inactive status,</li>
+                <li>PID, memory, uptime,</li>
+                <li>recent log lines,</li>
+                <li>unit file path.</li>
+            </ul>
+        </li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>List All Units</b></li>
+    <br/>
+    <ul>
+        <li>Show every unit systemd knows about:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-units
+</code></pre>
+
+    <ul>
+        <li>Show <u>all</u> units including inactive ones:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-units --all
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>List All Services Only</b></li>
+    <br/>
+    <ul>
+        <li>Filter only <code>.service</code> units:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-units --type=service
+</code></pre>
+
+    <ul>
+        <li>You can also list:
+            <ul>
+                <li><code>--type=socket</code></li>
+                <li><code>--type=timer</code></li>
+                <li><code>--type=mount</code></li>
+                <li><code>--type=target</code></li>
+            </ul>
+        </li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>List Failed Units</b></li>
+    <br/>
+    <ul>
+        <li>To quickly see what crashed:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl --failed
+</code></pre>
+
+    <ul>
+        <li>Useful after boot or troubleshooting.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>View Logs of a Service</b></li>
+    <br/>
+    <ul>
+        <li>Using the journal:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx
+</code></pre>
+
+    <ul>
+        <li>Follow logs live (similar to <code>tail -f</code>):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx -f
+</code></pre>
+
+    <ul>
+        <li>View today’s logs:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx --since today
+</code></pre>
+
+    <ul>
+        <li>View logs since last boot:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -u nginx -b
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>View System-Wide Logs</b></li>
+    <br/>
+    <ul>
+        <li>All logs managed by <code>systemd-journald</code>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl
+</code></pre>
+
+    <ul>
+        <li>Filter by priority:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl -p warning
+journalctl -p err
+journalctl -p crit
+</code></pre>
+
+    <ul>
+        <li>Filter by time:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">journalctl --since "2024-01-01" --until "2024-01-02"
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Inspect Unit Configuration Files</b></li>
+    <br/>
+    <ul>
+        <li>See the exact unit file systemd is using:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl cat nginx.service
+</code></pre>
+
+    <ul>
+        <li>List all property fields of a unit:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl show nginx
+</code></pre>
+
+    <ul>
+        <li>This reveals:
+            <ul>
+                <li>Runtime paths</li>
+                <li>CGroup config</li>
+                <li>Environment variables</li>
+                <li>Restart settings</li>
+                <li>Unit metadata</li>
+            </ul>
+        </li>
+    </ul>
+
+    <br/><br/>
+
+
+    <li><b>View Dependencies and Boot Order</b></li>
+    <br/>
+    <ul>
+        <li>To understand dependencies around a service:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-dependencies sshd
+</code></pre>
+
+    <ul>
+        <li>Display reverse dependencies (what depends on this unit):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-dependencies --reverse sshd
+</code></pre>
+
+    <ul>
+        <li>Graphical view (ASCII tree):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl list-dependencies --all
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Check Boot Time and Performance</b></li>
+    <br/>
+    <ul>
+        <li>Use <code>systemd-analyze</code> to inspect boot performance:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemd-analyze
+</code></pre>
+
+    <ul>
+        <li>See slowest services:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemd-analyze blame
+</code></pre>
+
+    <ul>
+        <li>View dependency graph (export as image):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemd-analyze plot &gt; boot.svg
+</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Check Current System Target (Runlevel)</b></li>
+    <br/>
+    <ul>
+        <li>To see what systemd target (similar to old runlevel) is active:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">systemctl get-default
+</code></pre>
+
+    <ul>
+        <li>Examples:
+            <ul>
+                <li><code>graphical.target</code></li>
+                <li><code>multi-user.target</code></li>
+            </ul>
+        </li>
+    </ul>
+
+    <br/><br/>
+</ol>
 <!-- * * * * * * * * * * * * * * -->
 
 
