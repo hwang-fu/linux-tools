@@ -1,120 +1,533 @@
 <!-- * * * * * * * * * * * * * * -->
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>CURL</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/components/prism-core.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/autoloader/prism-autoloader.min.js"
+            data-prismjs-autoloader-path="https://cdn.jsdelivr.net/npm/prismjs/components/"></script>
+    <script src="https://cdn.jsdelivr.net/npm/prismjs/plugins/line-numbers/prism-line-numbers.min.js"></script>
+
 <style>
+    html {
+        scroll-behavior: smooth;
+    }
+
+    .back-to-top {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: #333;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-decoration: none;
+        font-size: 22px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        opacity: 0.75;
+        transition: opacity 0.2s ease, transform 0.2s ease;
+        z-index: 999;
+    }
+
+    .back-to-top:hover {
+        opacity: 1;
+        transform: translateY(-2px);
+    }
+
+    .nav-icon {
+        width: 18px;
+        height: 18px;
+        object-fit: contain;
+        vertical-align: middle;
+        margin-left: 0.3rem;
+    }
+
     table {
-        border-collapse: collapse;      /* merge borders so you don't get double lines */
-        width: 100%;                    /* optional: make it full width */
-        font-family: system-ui, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
         font-size: 14px;
     }
 
     th {
-        background-color: #f5f5f5;      /* light gray header background */
-        text-align: left;               /* header text alignment */
+        background-color: #f5f5f5;
+        text-align: left;
         font-weight: 600;
     }
 
     th, td {
-        border: 1px solid #ddd;         /* subtle border color */
-        padding: 8px 12px;              /* breathing room */
+        border: 1px solid #ddd;
+        padding: 8px 12px;
     }
 
     tr:nth-child(even) {
-        background-color: #fafafa;      /* zebra striping for readability */
+        background-color: #fafafa;
     }
 
     tr:hover {
-        background-color: #f0f8ff;      /* light hover highlight */
+        background-color: #f0f8ff;
     }
 
-    .hl-red {
-        background-color: red;
+    .comment {
+        color: grey;
     }
 
-    .hl-green {
-        background-color: green;
-    }
-
-    .hl-blue {
-        background-color: blue;
-    }
-
-    .hl-yellow {
-        background-color: yellow;
-    }
-
-    .hl-red-bg {
-        background-color: red;
-    }
-
-    .hl-green-bg {
-        background-color: green;
-    }
-
-    .hl-blue-bg {
-        background-color: blue;
-    }
-
-    .hl-yellow-bg {
-        background-color: yellow;
-    }
-
-    .hl-red-fg {
-        color: red;
-    }
-
-    .hl-green-fg {
-        color: green;
-    }
-
-    .hl-blue-fg {
-        color: blue;
-    }
-
-    .hl-yellow-fg {
-        color: yellow;
-    }
-
-    .hl-purple-fg {
-        color: purple;
+    .token.keyword {
+        font-weight: 500;
     }
 
     .red-underline {
         text-decoration-line: underline;
         text-decoration-color: red;
-        text-decoration-thickness: 2px; /* optional: make it a bit thicker */
-        text-underline-offset: 2px;     /* optional: move it slightly down */
+        text-decoration-thickness: 2px;
+        text-underline-offset: 2px;
+    }
+
+    body {
+        font-family: "KaiTi", "楷体", "STKaiti", "Kaiti SC", serif;
+        font-variant-ligatures: none;
+    }
+
+    ul > li {
+        list-style-type: disc;
+    }
+
+    code {
+        color: #24292e;
+        background-color: #f6f8fa;
+        border: 1px solid #d0d7de;
+        border-radius: .375rem;
+        padding: .15rem .35rem;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.4;
+    }
+
+    pre {
+        margin: 1rem 0;
+        padding: .8rem 1rem;
+        background-color: #f6f8fa;
+        border: 1px solid #d0d7de;
+        border-radius: .5rem;
+        overflow: auto;
+        tab-size: 4;
+    }
+
+    pre code {
+        display: block;
+        padding: 0;
+        background: transparent;
+        border: 0;
+        color: #24292e;
+        font-family: "FiraCode Nerd Font", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+        font-size: 0.875rem;
+        line-height: 1.5;
+        white-space: pre;
     }
 </style>
+</head>
+<!-- * * * * * * * * * * * * * * -->
+<body>
+<a href="#" class="back-to-top" aria-label="Back to top">
+    &#8593;
+</a>
 <!-- * * * * * * * * * * * * * * -->
 
 
-
 <!-- * * * * * * * * * * * * * * -->
-<script>
-</script>
-<!-- * * * * * * * * * * * * * * -->
-
-
 <hr/>
-<h1>curl Manual</h1>
+<nav id="toc" style="margin-bottom: 2rem;">
+    <ul style="line-height: 1.8;">
+        <li><a href="#curl-introduction">Introduction</a></li>
+    </ul>
+</nav>
 <hr/>
+<!-- * * * * * * * * * * * * * * -->
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3 id="curl-introduction">Introduction to <code>curl</code> – the Command-Line URL Tool</h3>
 <ol>
-    <li></li>
+
+    <li><b>What Is curl?</b></li>
     <br/>
-    <li></li>
+    <ul>
+        <li><code>curl</code> (short for <b>Client URL</b>) is a powerful command-line tool to:
+            <ul>
+                <li>send HTTP(S) requests,</li>
+                <li>download or upload files,</li>
+                <li>interact with APIs,</li>
+                <li>debug network problems.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>It supports many protocols:
+            <ul>
+                <li>HTTP, HTTPS</li>
+                <li>FTP, FTPS, SFTP</li>
+                <li>SCP, SMTP, POP3, IMAP, and more (depending on build)</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Typical use cases:
+            <ul>
+                <li>Checking a website response</li>
+                <li>Calling a REST API from the terminal</li>
+                <li>Downloading files</li>
+                <li>Sending form data or JSON payloads</li>
+                <li>Testing authentication and headers</li>
+            </ul>
+        </li>
+        <br/>
+        <li><code>curl</code> is installed by default on many Linux/macOS systems; Windows has official builds too.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Basic Syntax</b></li>
     <br/>
-    <li></li>
+    <ul>
+        <li>The simplest form:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl &lt;options&gt; &lt;URL&gt;</code></pre>
+
     <br/>
-    <li></li>
+    <ul>
+        <li>Examples:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers"># Fetch a web page and print to terminal (stdout)
+curl https://example.com
+
+# Fetch over HTTP
+curl http://example.com</code></pre>
+
     <br/>
-    <li></li>
+    <ul>
+        <li>If you provide no options, <code>curl</code>:
+            <ul>
+                <li>sends an HTTP <code>GET</code> request,</li>
+                <li>prints the response body to the terminal.</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Saving Output to a File</b></li>
     <br/>
+    <ul>
+        <li>By default, the response body is printed to the screen.</li>
+        <li>To save it to a file, you have two common options:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers"># 1) Shell redirection
+curl https://example.com &gt; page.html
+
+# 2) Let curl decide file name from URL with -O (uppercase O)
+curl -O https://example.com/file.zip
+
+# 3) Save to a chosen file name with -o (lowercase o)
+curl -o mypage.html https://example.com</code></pre>
+
+    <br/>
+    <ul>
+        <li><code>-O</code>: use the file name from the URL.</li>
+        <li><code>-o</code>: explicitly specify the file name.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Seeing Response Headers</b></li>
+    <br/>
+    <ul>
+        <li>Sometimes you want to see HTTP headers (status code, content type, etc.).</li>
+        <li>Use <code>-i</code> (include headers in output):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -i https://example.com</code></pre>
+
+    <br/>
+    <ul>
+        <li>This prints:</li>
+        <ul>
+            <li>status line (e.g. <code>HTTP/1.1 200 OK</code>)</li>
+            <li>response headers</li>
+            <li>blank line</li>
+            <li>response body</li>
+        </ul>
+        <li>Use <code>-I</code> (uppercase i) to fetch <b>only</b> the headers via an HTTP <code>HEAD</code> request:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -I https://example.com</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Following Redirects</b></li>
+    <br/>
+    <ul>
+        <li>Many sites redirect (e.g. from <code>http</code> to <code>https</code>).</li>
+        <li>By default, <code>curl</code> does <b>not</b> follow redirects.</li>
+        <li>Use <code>-L</code> to follow them:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -L http://example.com</code></pre>
+
+    <br/>
+    <ul>
+        <li>Now <code>curl</code> will automatically follow the <code>Location</code> headers until it reaches the final URL.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Adding Custom Headers</b></li>
+    <br/>
+    <ul>
+        <li>APIs often require custom HTTP headers (e.g. auth tokens, content type).</li>
+        <li>Use <code>-H</code> (or <code>--header</code>) to add a header:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -H "X-My-Header: hello" https://example.com
+
+# Multiple headers:
+curl \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Accept: application/json" \
+  https://api.example.com/data</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Sending Query Parameters</b></li>
+    <br/>
+    <ul>
+        <li>Query parameters are simply part of the URL:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl "https://example.com/search?q=haskell&amp;page=2"</code></pre>
+
+    <br/>
+    <ul>
+        <li>Be sure to quote the URL if it contains <code>&amp;</code> so the shell does not interpret it.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>HTTP Methods: GET, POST, PUT, DELETE, ...</b></li>
+    <br/>
+    <ul>
+        <li>By default, <code>curl</code> sends a <code>GET</code> request.</li>
+        <li>Use <code>-X</code> (or <code>--request</code>) to specify a method explicitly:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers"># Explicit GET
+curl -X GET https://example.com
+
+# DELETE
+curl -X DELETE https://api.example.com/items/123</code></pre>
+
+    <br/>
+    <ul>
+        <li>For <b>POST/PUT</b>, you usually combine with <code>-d</code> (send data).</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Sending Form Data</b> (<code>application/x-www-form-urlencoded</code>)</li>
+    <br/>
+    <ul>
+        <li>Classic HTML forms send data encoded like <code>key=value&amp;key2=value2</code>.</li>
+        <li>Use <code>-d</code> (or <code>--data</code>) to send such data:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -X POST https://example.com/login \
+  -d "username=alice&amp;password=secret"</code></pre>
+
+    <br/>
+    <ul>
+        <li>When you use <code>-d</code> without <code>-X</code>, <code>curl</code> automatically uses <code>POST</code> and sets an appropriate content type.</li>
+        <li>To send multiple fields:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl https://example.com/form \
+  -d "field1=value1" \
+  -d "field2=value2"</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Sending JSON Data</b></li>
+    <br/>
+    <ul>
+        <li>Modern APIs typically use JSON.</li>
+        <li>When sending JSON:
+            <ul>
+                <li>set the <code>Content-Type</code> header,</li>
+                <li>provide JSON payload via <code>-d</code>.</li>
+            </ul>
+        </li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -X POST https://api.example.com/users \
+  -H "Content-Type: application/json" \
+  -d '{"name": "Alice", "age": 30}'</code></pre>
+
+    <br/>
+    <ul>
+        <li>If your shell uses quotes differently, be careful to escape them properly.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Uploading Files</b></li>
+    <br/>
+    <ul>
+        <li>Use <code>-F</code> (form) to upload files with multipart/form-data (like HTML forms):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -X POST https://example.com/upload \
+  -F "file=@/path/to/local/file.txt"</code></pre>
+
+    <br/>
+    <ul>
+        <li>The <code>@</code> prefix tells <code>curl</code> to read the contents from a file.</li>
+        <li>You can upload multiple fields/files:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl https://example.com/upload \
+  -F "description=My file" \
+  -F "file=@/path/to/file.txt"</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>Authentication</b></li>
+    <br/>
+    <ul>
+        <li><b>Basic Auth</b>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -u "username:password" https://api.example.com/secure</code></pre>
+
+    <br/>
+    <ul>
+        <li><code>-u</code> adds the appropriate <code>Authorization: Basic ...</code> header.</li>
+        <li><b>Bearer Token (common for APIs)</b>:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl https://api.example.com/data \
+  -H "Authorization: Bearer YOUR_TOKEN_HERE"</code></pre>
+
+    <br/><br/>
+
+
+    <li><b>HTTPS and Certificates</b></li>
+    <br/>
+    <ul>
+        <li>When using <code>https://</code>, <code>curl</code> verifies the server’s TLS certificate.</li>
+        <li>For debugging self-signed or local dev setups, you can (temporarily) skip verification:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -k https://self-signed.example.local</code></pre>
+
+    <br/>
+    <ul>
+        <li><b>Warning:</b> <code>-k</code> (or <code>--insecure</code>) disables certificate verification and is not recommended for production.</li>
+        <li>Better: point <code>curl</code> to a custom CA bundle with <code>--cacert</code>.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Verbose and Debugging Output</b></li>
+    <br/>
+    <ul>
+        <li>Use <code>-v</code> (<code>--verbose</code>) to debug requests:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -v https://example.com</code></pre>
+
+    <br/>
+    <ul>
+        <li>This prints:
+            <ul>
+                <li>request line and headers,</li>
+                <li>response headers,</li>
+                <li>TLS handshake info (for HTTPS).</li>
+            </ul>
+        </li>
+        <li>Use <code>--trace</code> and <code>--trace-ascii</code> for even more low-level details.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Setting User-Agent and Other Common Options</b></li>
+    <br/>
+    <ul>
+        <li>Some servers behave differently based on the User-Agent header.</li>
+        <li>Set it with <code>-A</code> (or <code>--user-agent</code>):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl -A "MyTestClient/1.0" https://example.com</code></pre>
+
+    <br/>
+    <ul>
+        <li>Other useful flags:
+            <ul>
+                <li><code>--compressed</code> – ask server for compressed response (gzip, etc.)</li>
+                <li><code>--max-time &lt;seconds&gt;</code> – limit total time of request</li>
+                <li><code>--connect-timeout &lt;seconds&gt;</code> – limit connection setup time</li>
+            </ul>
+        </li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Rate Limiting and Repeated Requests</b></li>
+    <br/>
+    <ul>
+        <li>For simple repeated calls with pauses, combine <code>curl</code> with shell tools:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers"># Call an endpoint every 5 seconds (Ctrl-C to stop)
+while true; do
+  curl -s https://example.com/health
+  echo
+  sleep 5
+done</code></pre>
+
+    <br/>
+    <ul>
+        <li><code>-s</code> (silent) hides progress meter and errors (show only output), useful when scripting.</li>
+    </ul>
+    <br/><br/>
+
+
+    <li><b>Getting Help and Manual</b></li>
+    <br/>
+    <ul>
+        <li>To see a quick summary of options:</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">curl --help</code></pre>
+
+    <br/>
+    <ul>
+        <li>For the full manual (very detailed):</li>
+    </ul>
+
+<pre><code class="language-bash line-numbers">man curl        # on Unix-like systems
+curl --manual   # portable way</code></pre>
+
+    <br/><br/>
 </ol>
-<br/>
 <!-- * * * * * * * * * * * * * * -->
 
 
@@ -122,14 +535,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
@@ -137,14 +543,7 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
@@ -152,414 +551,17 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+
 <!-- * * * * * * * * * * * * * * -->
 
 
 <hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
 <!-- * * * * * * * * * * * * * * -->
 
-
-<hr/>
-
-
+<footer>
+    <p>&copy; 2025 Hwangfucius. All rights reserved.</p>
+</footer>
+</body>
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
+</html>
 <!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-<hr/>
-
-
-<!-- * * * * * * * * * * * * * * -->
-<h3></h3>
-<ol>
-    <li></li>
-    <br/>
-    <li></li>
-    <br/>
-</ol>
-<br/>
-<!-- * * * * * * * * * * * * * * -->
-
-
-
-
-
-
-
-
-
-
-
-
