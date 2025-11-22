@@ -151,6 +151,7 @@
         <li><a href="#ssh-keygen-intro">About <code>ssh-keygen</code></a></li>
         <li><a href="#ssh-authorized-keys">Multiple Public Keys</a></li>
         <li><a href="#ssh-config">How to Write a SSH Config File?</a></li>
+        <li><a href="#ssh-rsync">Using <code>rsync</code> (Local &amp; over SSH)</a></li>
     </ul>
 </nav>
 <hr/>
@@ -1804,6 +1805,327 @@ Match all
         <li>Use separate keys/config entries for different services (e.g., work vs personal) to limit damage if one key is compromised.</li>
     </ul>
     <br/><br/>
+</ol>
+<!-- * * * * * * * * * * * * * * -->
+
+
+<hr/>
+
+
+<!-- * * * * * * * * * * * * * * -->
+<h3 id="ssh-rsync">Using rsync (Local &amp; over SSH)</h3>
+<ol>
+
+    <li><b>What Is rsync?</b></li>
+    <ul>
+        <br/>
+        <li><code>rsync</code> is a fast, incremental file-copying tool.</li>
+        <br/>
+        <li>It preserves permissions, ownership, timestamps, symlinks (with correct options).</li>
+        <br/>
+        <li>Works both:
+            <ul>
+                <li>locally (disk to disk / directory to directory)</li>
+                <li>remotely over SSH (typical for backups &amp; deployments)</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Basic pattern:
+<pre><code class="language-bash line-numbers">rsync [OPTIONS] SOURCE DEST</code></pre>
+        </li>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Key Options You Will Use All the Time</li>
+    <br/>
+
+    <table border="1" cellspacing="0" cellpadding="6">
+        <thead>
+            <tr>
+                <th>Option</th>
+                <th>Description</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+            <tr>
+                <td><code>-a</code></td>
+                <td>Archive mode (recommended default)</td>
+                <td>
+                    Preserves:<br/>
+                    &nbsp;&nbsp;&bull; permissions<br/>
+                    &nbsp;&nbsp;&bull; timestamps<br/>
+                    &nbsp;&nbsp;&bull; symlinks<br/>
+                    &nbsp;&nbsp;&bull; device files<br/>
+                    &nbsp;&nbsp;&bull; recursive directories<br/><br/>
+                    Equivalent to: <code>-rlptgoD</code>
+                </td>
+            </tr>
+
+            <tr>
+                <td><code>-v</code></td>
+                <td>Verbose output</td>
+                <td>Prints names of files being transferred.</td>
+            </tr>
+
+            <tr>
+                <td><code>-z</code></td>
+                <td>Compress data during transfer</td>
+                <td>Improves transfer speed on slow networks.</td>
+            </tr>
+
+            <tr>
+                <td><code>--delete</code></td>
+                <td>Mirror deletions</td>
+                <td>
+                    Removes files on destination that no longer exist in source.<br/>
+                    Useful for exact mirroring.<br/>
+                    Always test with <code>--dry-run</code> first.
+                </td>
+            </tr>
+
+            <tr>
+                <td><code>--dry-run</code><br/><code>-n</code></td>
+                <td>Simulation mode</td>
+                <td>Shows what would change without making modifications.</td>
+            </tr>
+
+            <tr>
+                <td><code>--progress</code></td>
+                <td>Show per-file transfer progress</td>
+                <td>Useful for large files, shows speed and ETA.</td>
+            </tr>
+
+            <tr>
+                <td><code>-e ssh</code></td>
+                <td>Use SSH as the remote shell</td>
+                <td>
+                    Usually optional, but needed for customizing SSH options (port, key file, etc.).
+                </td>
+            </tr>
+
+        </tbody>
+    </table>
+    <br/>
+    <br/>
+
+
+    <li>Local Usage (Directory to Directory)</li>
+    <br/>
+    <ul>
+        <li>Basic local sync:
+<pre><code class="language-bash line-numbers">rsync -av source_dir/ backup_dir/</code></pre>
+        </li>
+        <li>Important: the meaning of the trailing slash:
+            <ul>
+                <li><code>source_dir/</code> &rarr; copy <u>contents of</u> <code>source_dir</code> into <code>backup_dir</code>.</li>
+                <li><code>source_dir</code> (without slash) &rarr; copy the directory itself as a subdirectory.</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Examples:</li>
+        <br/>
+        <ul>
+            <li>Copy contents:
+<pre><code class="language-bash line-numbers">rsync -av project/ /mnt/backup/project/</code></pre>
+            </li>
+            <li>Copy directory itself:
+<pre><code class="language-bash line-numbers">rsync -av project /mnt/backup/</code></pre>
+                Destination tree becomes: <code>/mnt/backup/project/...</code></li>
+        </ul>
+        <br/>
+        <li>Dry run to inspect:
+<pre><code class="language-bash line-numbers">rsync -av --dry-run project/ /mnt/backup/project/</code></pre>
+        </li>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Basic Remote Usage over SSH</li>
+    <br/>
+    <ul>
+        <li>General pattern (source local, dest remote):
+<pre><code class="language-bash line-numbers">rsync -avz SOURCE/ user@remote.host:/path/to/dest/</code></pre>
+        </li>
+        <li>General pattern (source remote, dest local):
+<pre><code class="language-bash line-numbers">rsync -avz user@remote.host:/path/to/src/ DEST/</code></pre>
+        </li>
+        <br/>
+        <li>Example: upload local project to server:
+<pre><code class="language-bash line-numbers">rsync -avz ./app/ user@example.com:/var/www/app/</code></pre>
+        </li>
+        <br/>
+        <li>Example: download remote logs:
+<pre><code class="language-bash line-numbers">rsync -avz user@example.com:/var/log/myapp/ ./logs/</code></pre>
+        </li>
+        <br/>
+        <li>Using explicit SSH:
+<pre><code class="language-bash line-numbers">rsync -avz -e ssh ./app/ user@example.com:/var/www/app/</code></pre>
+        </li>
+        <li>Customize SSH (port, identity file, etc.):</li>
+        <br/>
+        <ul>
+            <li>Different port:
+<pre><code class="language-bash line-numbers">rsync -avz -e &quot;ssh -p 2222&quot; ./app/ user@example.com:/var/www/app/</code></pre>
+            </li>
+            <li>Specific SSH key:
+<pre><code class="language-bash line-numbers">rsync -avz -e &quot;ssh -i ~/.ssh/deploy_key&quot; ./app/ user@example.com:/var/www/app/</code></pre>
+            </li>
+        </ul>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Using rsync with SSH Config Aliases</li>
+    <br/>
+    <ul>
+        <li>Configure <code>~/.ssh/config</code>:</li>
+<pre><code class="language-bash line-numbers">Host myserver
+    HostName example.com
+    User deploy
+    Port 2222
+    IdentityFile ~/.ssh/deploy_key
+</code></pre>
+        <li>Then use simply:</li>
+<pre><code class="language-bash line-numbers">rsync -avz ./app/ myserver:/var/www/app/</code></pre>
+        <li>No need for <code>-e</code> then, because SSH picks up config for <code>myserver</code>.</li>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Common Patterns: Mirroring &amp; Backups</li>
+    <br/>
+    <ul>
+        <li>Mirror local directory to remote (delete extras on remote):</li>
+<pre><code class="language-bash line-numbers">rsync -avz --delete ./app/ myserver:/var/www/app/</code></pre>
+        <ul>
+            <li>This makes <code>/var/www/app</code> an exact mirror of <code>./app</code>.</li>
+            <li>Files deleted locally will be deleted on remote.</li>
+        </ul>
+        <br/>
+        <li>Safe first step: always start with a dry-run:</li>
+<pre><code class="language-bash line-numbers">rsync -avz --delete --dry-run ./app/ myserver:/var/www/app/</code></pre>
+        <br/>
+        <li>Incremental backup to local external disk:</li>
+<pre><code class="language-bash line-numbers">rsync -av --delete ~/Documents/ /mnt/backup/Documents/</code></pre>
+        <br/>
+        <li>Backup to remote server over SSH:</li>
+<pre><code class="language-bash line-numbers">rsync -avz --delete ~/Documents/ backup@backup.example.com:/data/backup/junzhe-docs/</code></pre>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Excluding Files and Directories</li>
+    <br/>
+    <ul>
+        <li>Use <code>--exclude</code> to skip certain paths:</li>
+<pre><code class="language-bash line-numbers">rsync -avz \
+  --exclude &quot;.git/&quot; \
+  --exclude &quot;node_modules/&quot; \
+  ./app/ myserver:/var/www/app/</code></pre>
+        <br/>
+        <li>Exclude patterns are matched against relative paths.</li>
+        <li>You can store them in a file:</li>
+<pre><code class="language-bash line-numbers"># exclude.txt
+.git/
+node_modules/
+dist/
+*.log
+</code></pre>
+        <li>Then:</li>
+<pre><code class="language-bash line-numbers">rsync -avz --exclude-from=exclude.txt ./app/ myserver:/var/www/app/</code></pre>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Permissions, Ownership, and Timestamps</li>
+    <br/>
+    <ul>
+        <li><code>-a</code> (archive) already includes:
+            <ul>
+                <li><code>-p</code> &rarr; preserve permissions</li>
+                <li><code>-o</code> &rarr; preserve owner (needs root to work fully)</li>
+                <li><code>-g</code> &rarr; preserve group</li>
+                <li><code>-t</code> &rarr; preserve modification times</li>
+            </ul>
+        </li>
+        <br/>
+        <li>Extra options:</li>
+        <ul>
+            <li><code>-H</code> &rarr; preserve hard links</li>
+            <li><code>-A</code> &rarr; preserve ACLs</li>
+            <li><code>-X</code> &rarr; preserve extended attributes</li>
+        </ul>
+        <br/>
+        <li>Example (for full system backup):</li>
+<pre><code class="language-bash line-numbers">sudo rsync -aHAX --delete / /mnt/backup/rootfs/</code></pre>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Speed Tuning and Large Transfers</li>
+    <br/>
+    <ul>
+        <li>Compression: <code>-z</code> helps on slow networks, but may be useless or harmful on fast LANs.</li>
+        <br/>
+        <li>Bandwidth limiting:</li>
+        <ul>
+            <br/>
+            <li>To avoid saturating your connection:</li>
+<pre><code class="language-bash line-numbers">rsync -avz --bwlimit=2000 ./app/ myserver:/var/www/app/</code></pre>
+                (limit ~2000 KB/s)</li>
+        </ul>
+        <br/>
+        <li>Partial transfers / resume:</li>
+        <ul>
+            <li><code>--partial</code> keeps partially transferred files.</li>
+            <li><code>--partial --progress</code> is common for large files.</li>
+        </ul>
+    </ul>
+    <br/>
+    <br/>
+
+
+    <li>Typical Real-World Workflows</li>
+    <br/>
+    <ul>
+        <li>1. Deploying a web app:</li>
+<pre><code class="language-bash line-numbers"># from local dev machine:
+rsync -avz --delete                     \
+    --exclude &quot;.git/&quot;         \
+    --exclude &quot;node_modules/&quot; \
+    ./app/ myserver:/var/www/app/</code></pre>
+        <br/>
+
+        <li>2. Home directory backup to a remote server:</li>
+<pre><code class="language-bash line-numbers">rsync -avz --delete                     \
+    --exclude &quot;.cache/&quot;       \
+    --exclude &quot;Downloads/&quot;    \
+    ~/ mybackup:/data/backups/junzhe-home/</code></pre>
+        <br/>
+
+        <li>3. Synchronize large data between two servers (run from your local machine):</li>
+<pre><code class="language-bash line-numbers">rsync -avz              \
+  user1@server1:/data/  \
+  user2@server2:/mirror/data/</code></pre>
+        <br/>
+
+        <li>4. One-time huge file transfer with resume support:</li>
+<pre><code class="language-bash line-numbers">rsync -avz --partial --progress \
+  largefile.iso myserver:/data/</code></pre>
+    </ul>
+    <br/>
+
 </ol>
 <!-- * * * * * * * * * * * * * * -->
 
