@@ -171,7 +171,7 @@
             <br/>
             <li><code>.,$</code>: from current line to the end.</li>
             <br/>
-            <li><code>'<,'></code>: visual selection (start / end).</li>
+            <li><code>'&lt;,'&gt;</code>: visual selection (start / end).</li>
             <br/>
             <li><code>line+N</code>: <i>N</i> lines after <i>line</i>.</li>
             <br/>
@@ -298,11 +298,211 @@
 
 
 <!-- * * * * * * * * * * * * * * -->
-<h3></h3>
+<h3>Using External <u>sed</u> in Vim</h3>
 <ol>
-    <li></li>
+    <li>Basic syntax: <code>:[range]!sed 's/{pattern}/{replace}/{flags}'</code></li>
     <br/>
-    <li></li>
+    <ul>
+        <li><b><i>range</i></b>: which lines to filter through sed.</li>
+        <ol>
+            <br/>
+            <li><code>.</code>: current line only.</li>
+            <br/>
+            <li><code>%</code>: entire file (most common).</li>
+            <br/>
+            <li><code>'&lt;,'&gt;</code>: visual selection.</li>
+            <br/>
+            <li><code>1,10</code>: lines 1 through 10.</li>
+            <br/>
+            <li><code>.,$</code>: current line to end of file.</li>
+            <br/>
+        </ol>
+        <br/>
+        <li><b>Key differences from Vim's <code>:s</code></b>:</li>
+        <ol>
+            <br/>
+            <li>Spawns external process (slower).</li>
+            <br/>
+            <li>Replaces buffer content with sed output.</li>
+            <br/>
+            <li>Uses sed regex syntax (slightly different from Vim).</li>
+            <br/>
+            <li>No access to Vim registers or special features.</li>
+            <br/>
+            <li>Single undo operation for entire filter.</li>
+            <br/>
+        </ol>
+        <br/>
+    </ul>
+    <br/>
+    <li>Common use cases:</li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Task</th>
+                <th>Vim Command</th>
+                <th>Equivalent Native Vim</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Simple substitution</td>
+                <td><code>:%!sed 's/foo/bar/g'</code></td>
+                <td><code>:%s/foo/bar/g</code> (faster)</td>
+            </tr>
+            <tr>
+                <td>Delete empty lines</td>
+                <td><code>:%!sed '/^$/d'</code></td>
+                <td><code>:g/^$/d</code> (better)</td>
+            </tr>
+            <tr>
+                <td>Delete lines with pattern</td>
+                <td><code>:%!sed '/pattern/d'</code></td>
+                <td><code>:g/pattern/d</code></td>
+            </tr>
+            <tr>
+                <td>Print specific lines</td>
+                <td><code>:%!sed -n '5,10p'</code></td>
+                <td><code>:5,10</code> (view only)</td>
+            </tr>
+            <tr>
+                <td>Insert line before match</td>
+                <td><code>:%!sed '/pattern/i\New line'</code></td>
+                <td><code>:g/pattern/norm! ONew line</code></td>
+            </tr>
+            <tr>
+                <td>Append line after match</td>
+                <td><code>:%!sed '/pattern/a\New line'</code></td>
+                <td><code>:g/pattern/norm! oNew line</code></td>
+            </tr>
+            <tr>
+                <td>Multiple operations</td>
+                <td><code>:%!sed 's/a/A/g; s/b/B/g'</code></td>
+                <td><code>:%s/a/A/g | %s/b/B/g</code></td>
+            </tr>
+            <tr>
+                <td>Case conversion (uppercase)</td>
+                <td><code>:%!sed 's/.*/\U&amp;/'</code></td>
+                <td><code>:% norm! gUU</code> or <code>:%s/.*/\U&amp;/</code></td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <li>Advanced sed patterns:</li>
+    <br/>
+    <ul>
+        <li><b>Regex differences from Vim:</b></li>
+        <ol>
+            <br/>
+            <li><code>\+</code>: one or more (in basic sed, or use <code>sed -E</code> for <code>+</code>).</li>
+            <br/>
+            <li><code>\?</code>: zero or one (in basic sed, or use <code>sed -E</code> for <code>?</code>).</li>
+            <br/>
+            <li><code>\|</code>: alternation (in basic sed, or use <code>sed -E</code> for <code>|</code>).</li>
+            <br/>
+            <li><code>\( \)</code>: capture groups (always escaped in basic sed).</li>
+            <br/>
+            <li><code>&amp;</code>: reference the entire match in replacement.</li>
+            <br/>
+            <li><code>\1, \2</code>: backreferences (same as Vim).</li>
+            <br/>
+        </ol>
+        <br/>
+        <li><b>Extended regex mode:</b> <code>:%!sed -E 's/(foo)(bar)/\2\1/'</code></li>
+        <br/>
+    </ul>
+    <br/>
+    <li>Practical examples:</li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th>Command</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Filter current line through sed</td>
+                <td><code>:.!sed 's/old/new/g'</code></td>
+            </tr>
+            <tr>
+                <td>Filter visual selection</td>
+                <td><code>:'&lt;,'&gt;!sed 's/old/new/g'</code></td>
+            </tr>
+            <tr>
+                <td>Remove trailing whitespace</td>
+                <td><code>:%!sed 's/[[:space:]]*$//'</code></td>
+            </tr>
+            <tr>
+                <td>Number all lines</td>
+                <td><code>:%!sed = | sed 'N;s/\n/\t/'</code></td>
+            </tr>
+            <tr>
+                <td>Double-space document</td>
+                <td><code>:%!sed G</code></td>
+            </tr>
+            <tr>
+                <td>Delete HTML tags</td>
+                <td><code>:%!sed 's/&lt;[^&gt;]*&gt;//g'</code></td>
+            </tr>
+            <tr>
+                <td>Convert DOS to Unix line endings</td>
+                <td><code>:%!sed 's/\r$//'</code></td>
+            </tr>
+            <tr>
+                <td>Swap first two fields (CSV)</td>
+                <td><code>:%!sed -E 's/([^,]*),([^,]*)/\2,\1/'</code></td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <li>When to use sed vs native Vim commands:</li>
+    <br/>
+    <table>
+        <thead>
+            <tr>
+                <th>Use sed when...</th>
+                <th>Use Vim's <code>:s</code> when...</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>You need a specific sed script you already have</td>
+                <td>Doing interactive editing (faster, better undo)</td>
+            </tr>
+            <tr>
+                <td>Using complex sed-specific features</td>
+                <td>Performance matters (no process spawning)</td>
+            </tr>
+            <tr>
+                <td>Piping through multiple filters</td>
+                <td>Need Vim registers or expression evaluation</td>
+            </tr>
+            <tr>
+                <td>Combining with other Unix tools</td>
+                <td>Working with visual selections frequently</td>
+            </tr>
+            <tr>
+                <td>Testing sed script for shell use</td>
+                <td>General text editing (native Vim is superior)</td>
+            </tr>
+        </tbody>
+    </table>
+    <br/>
+    <li>Combining sed with other filters:</li>
+    <br/>
+    <ul>
+        <li><code>:%!sed 's/foo/bar/' | grep bar</code>: substitute then filter.</li>
+        <br/>
+        <li><code>:%!sort | sed 's/^/- /'</code>: sort lines, then add bullet.</li>
+        <br/>
+        <li><code>:%!sed 's/&lt;/\&amp;lt;/g; s/&gt;/\&amp;gt;/g'</code>: HTML escape.</li>
+        <br/>
+    </ul>
+    <br/>
+    <li><b>Important note:</b> In most cases, <span class="hl-red-fg"><b>native Vim commands are preferred</b></span> over external sed for better performance, undo granularity, and integration with Vim's features.</li>
     <br/>
 </ol>
 <br/>
