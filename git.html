@@ -277,8 +277,7 @@
         It allows you to develop features, fix bugs, or experiment independently from the main codebase.</li>
     <br/>
     <br/>
-    <li>When you create a new Git repository, Git starts with a default branch (it is usually the branch that holds your production-ready code),<br/>
-        commonly named:</li>
+    <li>When you create a new Git repository, Git starts with a default branch (it is usually the branch that holds your production-ready code), commonly named:</li>
     <ul>
         <li><code>main</code> (modern default)</li>
         <li><code>master</code> (legacy / default in old versions)</li>
@@ -296,7 +295,7 @@ git switch -c feature/new-api
     <br/>
     <br/>
     <li><b>HEAD</b> is Git's special pointer to your current branch or commit.<br/>
-        When you checkout a branch, <b>HEAD</b> points to that branch.<br/>
+        When you checkout a branch, <b>HEAD</b> points to that branch.
         When you're in a detached <b>HEAD</b> state (e.g., on a specific commit), <b>HEAD</b> points directly to the commit hash.</li>
     <br/>
     <br/>
@@ -398,11 +397,15 @@ git push -u origin &lt;branch-name&gt;
     <br/>
     <ul>
         <li>This is where you create, edit, delete, and modify files.</li>
+        <br/>
         <li>The working directory shows:
             <ul>
-                <li><u>untracked files</u>: Git doesn't know about them</li>
-                <li><u>modified files</u>: Git knows them but they were changed</li>
-                <li><u>deleted files</u>: files removed but not staged yet</li>
+                <br/>
+                <li><u>untracked files</u>: Git doesn't know about them.</li>
+                <br/>
+                <li><u>modified files</u>: Git knows them but they were changed.</li>
+                <br/>
+                <li><u>deleted files</u>: files removed but not staged yet.</li>
             </ul>
         </li>
     </ul>
@@ -417,7 +420,6 @@ Changes not staged for commit:
   modified: README.md
 </code></pre>
 
-    <br/>
     <ul>
         <li>The working directory contains files before they are staged.</li>
         <li>To move files to the next stage, you must stage them.</li>
@@ -691,14 +693,9 @@ git add old.txt
 <pre><code class="language-bash line-numbers">git rm file.txt
 </code></pre>
 
-    <br/>
     <ul>
-        <li>This does:
-            <ul>
-                <li>Deletes <code>file.txt</code> from disk</li>
-                <li>Stages the deletion</li>
-            </ul>
-        </li>
+        <li>Deletes <code>file.txt</code> from disk</li>
+        <li>Stages the deletion</li>
     </ul>
     <br/><br/>
 
@@ -830,15 +827,15 @@ git restore --staged largefile.zip
     <li><b>Basic Usage: Saving Changes</b></li>
 <pre><code class="language-bash line-numbers">git stash
 </code></pre>
-    <br/>
     <ul>
         <li>Moves modified and staged changes into a stash entry.</li>
         <li>Resets your working directory to a clean state.</li>
     </ul>
 
+    <br/>
+
 <pre><code class="language-bash line-numbers">git stash save "WIP: working on login feature"
 </code></pre>
-    <br/>
     <ul>
         <li>Adds a message to identify the stash entry.</li>
     </ul>
@@ -869,7 +866,6 @@ git restore --staged largefile.zip
 stash@{1}: WIP: fixing UI
 stash@{2}: WIP: initial setup
 </code></pre>
-    <br/>
     <ul>
         <li>Stashes are stored in a stack-like structure.</li>
     </ul>
@@ -895,7 +891,6 @@ stash@{2}: WIP: initial setup
     <li><b>Applying and Removing a Stash (Pop)</b></li>
 <pre><code class="language-bash line-numbers">git stash pop
 </code></pre>
-    <br/>
     <ul>
         <li>Applies the most recent stash and removes it from the list.</li>
         <li>Equivalent to: apply + remove</li>
@@ -1102,7 +1097,6 @@ git stash pop
 <pre><code class="language-bash line-numbers">git switch main
 git merge feature/login
 </code></pre>
-    <br/>
     <ul>
         <li>This merges the <code>feature/login</code> branch into <code>main</code>.</li>
         <li>If no conflicts and histories diverged, Git creates a merge commit.</li>
@@ -1113,8 +1107,6 @@ git merge feature/login
     <li><b>Fast-Forward Merge</b></li>
 <pre><code class="language-bash line-numbers">git merge feature/ui
 </code></pre>
-
-    <br/>
     <ul>
         <li>If <code>main</code> has not diverged, Git simply moves the branch pointer forward.</li>
         <li>No merge commit is created.</li>
@@ -1135,7 +1127,6 @@ main --- A --- B   (feature merged)
     <li><b>Forcing a Merge Commit (No Fast-Forward)</b></li>
 <pre><code class="language-bash line-numbers">git merge --no-ff feature/login
 </code></pre>
-    <br/>
     <ul>
         <li>This forces Git to create a merge commit even if fast-forward is possible.</li>
         <li>Useful for:
@@ -1181,7 +1172,6 @@ main --- A --- B   (feature merged)
     <ul>
         <li>Shows whether you are in the middle of a merge.</li>
     </ul>
-    <br/>
 <pre><code class="language-bash line-numbers">git log --oneline --graph --decorate
 </code></pre>
     <ul>
@@ -1789,7 +1779,6 @@ origin  https://github.com/user/repo.git (push)
 
 
     <li><b>Inspecting a Remote in Detail</b></li>
-    <br/>
 <pre><code class="language-bash line-numbers">git remote show origin
 </code></pre>
 
@@ -1803,8 +1792,7 @@ origin  https://github.com/user/repo.git (push)
         </ul>
     </ul>
 
-<pre><code class="language-bash">
-* remote origin
+<pre><code class="language-bash">* remote origin
   Fetch URL: https://github.com/user/repo.git
   Push  URL: https://github.com/user/repo.git
   HEAD branch: main
@@ -1820,9 +1808,9 @@ origin  https://github.com/user/repo.git (push)
     <ul>
         <li>You can have more than one remote:</li>
         <ul>
-            <li><code>origin</code> → your GitHub repo</li>
-            <li><code>upstream</code> → original project</li>
-            <li><code>backup</code> → a mirrored backup</li>
+            <li><code>origin</code>: your GitHub repo</li>
+            <li><code>upstream</code>: original project</li>
+            <li><code>backup</code>: a mirrored backup</li>
         </ul>
         <br/>
         <li>Add upstream:</li>
@@ -1947,7 +1935,6 @@ origin  https://github.com/user/repo.git (push)
 
 
     <li><b>Viewing Configuration</b></li>
-    <br/>
 <pre><code class="language-bash line-numbers">git config --list
 </code></pre>
 
@@ -2005,7 +1992,6 @@ git config --global user.email "username@example.com"
 
 
     <li><b>Editing Configuration Files Directly</b></li>
-    <br/>
 <pre><code class="language-bash line-numbers">git config --global --edit
 </code></pre>
 
@@ -2023,7 +2009,6 @@ git config --global user.email "username@example.com"
 
 
     <li><b>Configuring the Default Editor</b></li>
-    <br/>
 <pre><code class="language-bash line-numbers">git config --global core.editor "nvim"
 </code></pre>
 
@@ -2041,7 +2026,6 @@ git config --global user.email "username@example.com"
 
 
     <li><b>Configuring Default Branch Name</b></li>
-    <br/>
 <pre><code class="language-bash line-numbers">git config --global init.defaultBranch main
 </code></pre>
 
@@ -2052,8 +2036,6 @@ git config --global user.email "username@example.com"
 
 
     <li><b>Configuring Line Endings</b></li>
-    <br/>
-
 <pre><code class="language-bash line-numbers">git config --global core.autocrlf input
 </code></pre>
 
@@ -2122,7 +2104,6 @@ git config --global difftool.vscode.cmd "code --wait --diff $LOCAL $REMOTE"
 
 
     <li><b>Configure Pull Behavior (Merge vs Rebase)</b></li>
-    <br/>
 
 <pre><code class="language-bash line-numbers">git config --global pull.rebase false
 </code></pre>
