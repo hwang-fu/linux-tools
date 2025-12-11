@@ -139,7 +139,6 @@
     <li><b>Basic Syntax</b></li>
 <pre><code class="language-bash line-numbers">sed 'command' filename
 </code></pre>
-    <br/>
     <ul>
         <li>Commands are placed inside single quotes.</li>
         <li><code>sed</code> supports many editing commands; the most common is <code>s</code> for substitution.</li>
@@ -150,7 +149,6 @@
     <li><b>Print File Contents (Default Behavior)</b></li>
 <pre><code class="language-bash line-numbers">sed '' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li><code>sed</code> always prints each processed line unless told otherwise.</li>
         <li><code>''</code> means "no modifications."</li>
@@ -161,7 +159,6 @@
     <li><b>Substitution Command (<code>s</code>)</b></li>
 <pre><code class="language-bash line-numbers">sed 's/old/new/' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li>Replaces the first occurrence of <code>old</code> with <code>new</code> in each line.</li>
     </ul>
@@ -171,7 +168,6 @@
     <li><b>Global Replacement (<code>g</code>)</b></li>
 <pre><code class="language-bash line-numbers">sed 's/foo/bar/g' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li><code>g</code> means "replace all occurrences per line."</li>
         <li>Without <code>g</code>, only the first match is replaced.</li>
@@ -182,7 +178,6 @@
     <li><b>Using Different Delimiters</b></li>
 <pre><code class="language-bash line-numbers">sed 's|/usr/local|/opt/apps|' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li><code>|</code> or <code>#</code> can be used as delimiters when the text contains slashes.</li>
         <li>Makes commands much easier to read.</li>
@@ -193,7 +188,6 @@
     <li><b>Edit File In-Place (<code>-i</code>)</b></li>
 <pre><code class="language-bash line-numbers">sed -i 's/foo/bar/g' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li>Modifies the file directly.</li>
         <li>Use cautiously: changes cannot be undone unless you specify backup.</li>
@@ -201,8 +195,6 @@
 
 <pre><code class="language-bash line-numbers">sed -i.bak 's/foo/bar/g' file.txt
 </code></pre>
-
-    <br/>
     <ul>
         <li>Creates <code>file.txt.bak</code> before modifying.</li>
     </ul>
@@ -212,7 +204,6 @@
     <li><b>Print Specific Lines</b></li>
 <pre><code class="language-bash line-numbers">sed -n '3p' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li><code>-n</code> disables automatic printing.</li>
         <li><code>3p</code> prints line 3.</li>
@@ -227,15 +218,12 @@
     <li><b>Delete Lines</b></li>
 <pre><code class="language-bash line-numbers">sed '3d' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li>Deletes line 3.</li>
     </ul>
 
 <pre><code class="language-bash line-numbers">sed '2,5d' file.txt      # delete lines 2 to 5
 </code></pre>
-
-    <br/>
     <ul>
         <li>Useful for cleaning text files or logs.</li>
     </ul>
@@ -246,15 +234,12 @@
 
 <pre><code class="language-bash line-numbers">sed '3i This is an inserted line' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li><code>i</code> inserts before a line.</li>
     </ul>
 
 <pre><code class="language-bash line-numbers">sed '3a This is an appended line' file.txt
 </code></pre>
-
-    <br/>
     <ul>
         <li><code>a</code> appends after a line.</li>
     </ul>
@@ -264,7 +249,6 @@
     <li><b>Replace a Whole Line</b></li>
 <pre><code class="language-bash line-numbers">sed '4c This replaces line 4 completely' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li><code>c</code> replaces an entire line with new content.</li>
     </ul>
@@ -274,15 +258,12 @@
     <li><b>Using Patterns Instead of Line Numbers</b></li>
 <pre><code class="language-bash line-numbers">sed '/error/d' file.log
 </code></pre>
-    <br/>
     <ul>
         <li>Deletes all lines containing the word <code>error</code>.</li>
     </ul>
 
 <pre><code class="language-bash line-numbers">sed '/BEGIN/,/END/p' config.txt
 </code></pre>
-
-    <br/>
     <ul>
         <li>Works with ranges defined by patterns.</li>
     </ul>
@@ -290,11 +271,8 @@
 
 
     <li><b>Multiple Commands</b></li>
-    <br/>
 <pre><code class="language-bash line-numbers">sed -e 's/foo/bar/' -e 's/x/y/' file.txt
 </code></pre>
-
-    <br/>
     <ul>
         <li>Apply multiple operations in order.</li>
     </ul>
@@ -304,8 +282,6 @@
     s/apple/orange/g
 ' file.txt
 </code></pre>
-
-    <br/>
     <ul>
         <li>Commands can also be written on multiple lines.</li>
     </ul>
@@ -315,7 +291,6 @@
     <li><b>Advanced Example: Remove Empty Lines</b></li>
 <pre><code class="language-bash line-numbers">sed '/^$/d' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li><code>^$</code> matches empty lines.</li>
     </ul>
@@ -325,7 +300,6 @@
     <li><b>Advanced Example: Remove Trailing Spaces</b></li>
 <pre><code class="language-bash line-numbers">sed 's/[ ]*$//' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li>Replaces trailing spaces with nothing.</li>
     </ul>
@@ -335,7 +309,6 @@
     <li><b>Advanced Example: Replace Only on Matching Lines</b></li>
 <pre><code class="language-bash line-numbers">sed '/error/ s/failed/FAILED/' file.txt
 </code></pre>
-    <br/>
     <ul>
         <li>Only lines containing <code>error</code> will have <code>failed</code> replaced.</li>
     </ul>
@@ -357,8 +330,6 @@
 
 <pre><code class="language-bash line-numbers">sed 'h; $!d; x' file.txt
 </code></pre>
-
-    <br/>
     <ul>
         <li>This swaps first and last lines (example of advanced usage).</li>
     </ul>
